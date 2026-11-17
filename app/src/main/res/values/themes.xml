@@ -1,0 +1,8 @@
+<resources>
+    <style name="Theme.WorkshopPricing" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">#146c5e</item>
+        <item name="colorPrimaryVariant">#0f564b</item>
+        <item name="colorOnPrimary">#ffffff</item>
+        <item name="android:statusBarColor">#146c5e</item>
+    </style>
+</resources>

@@ -1,0 +1,2239 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>نظام التسعير الشامل للورش</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ==========================================================================
+   1. المتغيرات والألوان (Modern Theme Variables)
+   ========================================================================== */
+:root {
+  --bg: #f3f5f7;
+  --bg-elevated: #ffffff;
+  --card: #ffffff;
+  --ink: #16202a;
+  --mut: #5c6b77;
+  --line: #e1e7ec;
+  --acc: #146c5e;
+  --acc-hover: #0f564b;
+  --accT: #ffffff;
+  --amb: #c27803;
+  --soft: #e6f3f0;
+  --bad: #c83232;
+  --bad-soft: #fde8e8;
+  --shadow-sm: 0 2px 6px rgba(16, 24, 40, .04);
+  --shadow-md: 0 8px 24px rgba(16, 24, 40, .08);
+  --shadow-lg: 0 -8px 30px rgba(16, 24, 40, .12);
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 18px;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f1519;
+    --bg-elevated: #172026;
+    --card: #1a242b;
+    --ink: #edf2f5;
+    --mut: #94a3af;
+    --line: #2a3741;
+    --acc: #4ec4b0;
+    --acc-hover: #63d4c1;
+    --accT: #0b1c19;
+    --amb: #f0b243;
+    --soft: #1b332e;
+    --bad: #f27474;
+    --bad-soft: #3a1c1c;
+    --shadow-sm: 0 2px 6px rgba(0, 0, 0, .2);
+    --shadow-md: 0 8px 24px rgba(0, 0, 0, .3);
+    --shadow-lg: 0 -8px 30px rgba(0, 0, 0, .45);
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: #0f1519;
+  --bg-elevated: #172026;
+  --card: #1a242b;
+  --ink: #edf2f5;
+  --mut: #94a3af;
+  --line: #2a3741;
+  --acc: #4ec4b0;
+  --acc-hover: #63d4c1;
+  --accT: #0b1c19;
+  --amb: #f0b243;
+  --soft: #1b332e;
+  --bad: #f27474;
+  --bad-soft: #3a1c1c;
+  --shadow-sm: 0 2px 6px rgba(0, 0, 0, .2);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, .3);
+  --shadow-lg: 0 -8px 30px rgba(0, 0, 0, .45);
+}
+
+/* ==========================================================================
+   2. التنسيقات الأساسية والهيدر العلوي (Base & Top App Bar)
+   ========================================================================== */
+* { box-sizing: border-box; }
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 15px/1.65 "IBM Plex Sans Arabic", Tahoma, "Segoe UI", sans-serif;
+  transition: background-color .2s ease, color .2s ease;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 1180px; margin: 0 auto; padding: 16px 16px 12px; }
+
+/* شريط التطبيق العلوي */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 12px 18px;
+  margin-bottom: 18px;
+  box-shadow: var(--shadow-sm);
+}
+.brand { display: flex; align-items: center; gap: 12px; }
+.brand-ico {
+  width: 40px; height: 40px;
+  border-radius: 11px;
+  background: linear-gradient(135deg, var(--acc), #0d4a40);
+  color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 4px 10px rgba(20, 108, 94, .25);
+}
+.topbar h1 { font-size: 19px; font-weight: 700; margin: 0; line-height: 1.3; }
+#lst { display: block; font-size: 12px; font-weight: 500; color: var(--acc); margin-top: 1px; }
+
+h2 {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0 0 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.mt { margin-top: 18px; }
+.note { color: var(--mut); font-size: 12.5px; margin: 6px 0 0; }
+.foot { text-align: center; color: var(--mut); font-size: 12px; padding: 24px 0 12px; opacity: .75; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+
+/* ==========================================================================
+   3. البطاقات والمدخلات والأزرار (Cards, Inputs & Buttons)
+   ========================================================================== */
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  margin-bottom: 14px;
+  box-shadow: var(--shadow-sm);
+  transition: border-color .2s ease, box-shadow .2s ease;
+}
+label { display: block; font-size: 13px; font-weight: 500; color: var(--mut); margin-bottom: 4px; }
+input, select, textarea {
+  width: 100%;
+  min-height: 44px;
+  padding: 9px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  color: var(--ink);
+  font: inherit;
+  transition: border-color .15s ease, box-shadow .15s ease, background-color .15s ease;
+}
+input:hover, select:hover, textarea:hover { border-color: var(--mut); }
+input[type=checkbox] { width: 18px; height: 18px; min-height: 0; accent-color: var(--acc); vertical-align: middle; margin-inline-end: 6px; }
+input:focus, select:focus, textarea:focus, button:focus-visible {
+  outline: none;
+  border-color: var(--acc);
+  box-shadow: 0 0 0 3px var(--soft);
+}
+
+button {
+  font: inherit;
+  font-weight: 500;
+  border: 1px solid var(--line);
+  background: var(--card);
+  color: var(--ink);
+  border-radius: var(--radius-sm);
+  padding: 9px 14px;
+  cursor: pointer;
+  min-height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all .15s ease;
+}
+button:hover { background: var(--bg); border-color: var(--mut); }
+button:active { transform: scale(.98); }
+
+button.p, button.on {
+  background: var(--acc);
+  color: var(--accT);
+  border-color: var(--acc);
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(20, 108, 94, .2);
+}
+button.p:hover, button.on:hover { background: var(--acc-hover); border-color: var(--acc-hover); }
+
+button.x { color: var(--bad); border-color: transparent; background: var(--bad-soft); }
+button.x:hover { background: var(--bad); color: #fff; }
+
+.ib { width: 42px; min-width: 42px; padding: 0; border-radius: 10px; }
+.big2 { width: 100%; min-height: 52px; font-size: 16px; margin-top: 8px; border-radius: var(--radius-md); }
+
+/* ==========================================================================
+   4. الشبكات والتبويبات (Grids & Navigation Tabs)
+   ========================================================================== */
+.grid { display: grid; grid-template-columns: 1fr 340px; gap: 16px; align-items: start; }
+@media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+
+.row { display: grid; grid-template-columns: repeat(auto-fit, minmax(115px, 1fr)); gap: 10px; margin-bottom: 10px; }
+.row.w { grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); }
+
+.u {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(64px, 1fr));
+  gap: 8px;
+  align-items: end;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 10px;
+  margin-bottom: 8px;
+}
+.u .nm { grid-column: span 2; }
+
+.thr { display: grid; grid-template-columns: 2fr 1fr auto; gap: 8px; margin-bottom: 8px; align-items: center; }
+.thr.h { grid-template-columns: 2fr 1fr 1fr auto; }
+.thr.b { grid-template-columns: 2fr 1fr 1fr 1fr auto; }
+@media (max-width: 600px) { .thr.b { grid-template-columns: 1fr 1fr; } }
+
+.bar { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; align-items: center; }
+.bar > select, .bar > input { width: auto; flex: 1; min-width: 130px; }
+
+/* شريط التبويبات العصري */
+#tabs {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  z-index: 15;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 6px;
+  margin: 10px 0 16px !important;
+  box-shadow: var(--shadow-sm);
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  gap: 6px;
+}
+#tabs button {
+  flex: 1;
+  white-space: nowrap;
+  border-color: transparent;
+  background: transparent;
+  font-weight: 600;
+  border-radius: 10px;
+  padding: 8px 12px;
+}
+#tabs button:hover:not(.on) { background: var(--bg); }
+#tabs button.on { background: var(--acc); color: var(--accT); box-shadow: 0 2px 6px rgba(20, 108, 94, .25); }
+
+.tab { display: none; animation: fadeIn .18s ease; }
+.tab.on { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+.it { border-inline-start: 4px solid var(--acc); }
+.res {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  background: var(--soft);
+  border: 1px solid rgba(20, 108, 94, .15);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 13.5px;
+  margin-top: 12px;
+}
+
+/* ==========================================================================
+   5. الصفحة الرئيسية والمشاريع (Home & Dashboard Stats)
+   ========================================================================== */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 14px;
+}
+@media (max-width: 600px) { .stats-grid { grid-template-columns: 1fr; } }
+.stat-box {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  box-shadow: var(--shadow-sm);
+}
+.stat-box span { font-size: 12px; color: var(--mut); }
+.stat-box b { font-size: 20px; font-weight: 700; color: var(--ink); }
+
+.hrow { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; gap: 10px; }
+.search-box { position: relative; }
+.search-box svg {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--mut);
+  pointer-events: none;
+}
+.search-box input { padding-right: 40px; background: var(--card); border-radius: var(--radius-md); box-shadow: var(--shadow-sm); }
+
+.chips { display: flex; gap: 8px; overflow-x: auto; padding: 12px 0 10px; scrollbar-width: none; }
+.chips::-webkit-scrollbar { display: none; }
+.chips button { white-space: nowrap; border-radius: 99px; min-height: 38px; padding: 6px 14px; font-size: 13.5px; }
+
+#hl {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 12px;
+  margin-bottom: 12px;
+}
+@media (max-width: 480px) { #hl { grid-template-columns: 1fr; } }
+
+.pc {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  text-align: start;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-inline-start: 4px solid var(--acc);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  margin: 0;
+  color: var(--ink);
+  box-shadow: var(--shadow-sm);
+  transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+}
+.pc:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); border-color: var(--acc); }
+.pc.st-draft { border-inline-start-color: #8c9ba5; }
+.pc.st-sent { border-inline-start-color: #d9822b; }
+.pc.st-accepted { border-inline-start-color: #146c5e; }
+.pc.st-progress { border-inline-start-color: #2b6cb0; }
+.pc.st-done { border-inline-start-color: #2f855a; }
+
+.pc .r { display: flex; justify-content: space-between; align-items: center; gap: 8px; width: 100%; }
+.bd { font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 99px; }
+.s-draft { background: #eef1f3; color: #4a5568; }
+.s-done { background: #e6f4ea; color: #1e6b38; }
+.s-sent { background: #fef3c7; color: #92400e; }
+.s-accepted { background: #d1fae5; color: #065f46; }
+.s-progress { background: #dbeafe; color: #1e40af; }
+
+#home { padding-bottom: 24px; }
+#proj { display: none; padding-bottom: 270px; }
+
+/* ==========================================================================
+   6. شريط الملخص السفلي والتنبيهات (Bottom Summary Bar & Warnings)
+   ========================================================================== */
+#pbr {
+  display: none;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 25;
+  max-width: 1180px;
+  margin: 0 auto;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-bottom: 0;
+  box-shadow: var(--shadow-lg);
+  border-radius: 22px 22px 0 0;
+  padding: 0 18px calc(14px + env(safe-area-inset-bottom, 0px));
+}
+#pbr .hd { display: block; width: 100%; height: 32px; min-height: 32px; border: 0; background: transparent; padding: 0; }
+#pbr .hd:hover { background: transparent; }
+#pbr .hd span { display: block; width: 44px; height: 5px; border-radius: 99px; background: var(--line); margin: 0 auto; transition: background .15s; }
+#pbr .hd:hover span { background: var(--mut); }
+#pbr .bt { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+#bsh { max-height: 46vh; overflow: auto; padding-bottom: 10px; border-bottom: 1px solid var(--line); margin-bottom: 10px; }
+.big { font-size: 26px; font-weight: 700; line-height: 1.25; color: var(--ink); }
+
+.ln { display: flex; justify-content: space-between; gap: 8px; padding: 6px 0; border-bottom: 1px dashed var(--line); font-size: 14px; }
+.tot { font-size: 19px; font-weight: 700; color: var(--amb); border: 0; padding-top: 10px; }
+.int { font-size: 13px; color: var(--mut); }
+
+.wi { font-size: 13px; padding: 8px 12px; border-radius: 8px; margin: 6px 0; background: var(--soft); border-inline-start: 4px solid var(--acc); }
+.wi.e { background: var(--bad-soft); border-inline-start-color: var(--bad); }
+.wi.w { background: rgba(240, 178, 67, .14); border-inline-start-color: var(--amb); }
+.wi b { margin-inline-end: 6px; }
+
+.wb { white-space: nowrap; font-weight: 700; font-size: 13px; border-radius: 99px; padding: 6px 14px; min-height: 36px; }
+.wb.e { background: #fde8e8; color: #9b1c1c; border-color: #f8b4b4; }
+.wb.w { background: #fef3c7; color: #92400e; border-color: #fcd34d; }
+.wb.ok { background: var(--soft); color: var(--acc); border-color: transparent; }
+
+/* ==========================================================================
+   7. الجداول والطباعة وشاشة الترخيص (Tables, Print & License)
+   ========================================================================== */
+details > summary {
+  cursor: pointer;
+  font-weight: 700;
+  padding: 10px 4px;
+  border-radius: 8px;
+  transition: background .15s;
+}
+details > summary:hover { background: var(--bg); }
+details.mt { border-top: 1px solid var(--line); margin-top: 10px !important; padding-top: 6px; }
+
+.at { width: 100%; border-collapse: collapse; font-size: 14px; }
+.at td, .at th { padding: 8px 6px; border-bottom: 1px solid var(--line); text-align: start; vertical-align: middle; }
+.at input { min-height: 38px; padding: 4px 8px; min-width: 90px; }
+.up { color: var(--bad); font-weight: 600; }
+.dn { color: var(--acc); font-weight: 600; }
+
+.rw { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 8px; }
+.rw input { min-width: 0; }
+.imc { display: flex; gap: 4px; align-items: center; }
+
+/* تنسيق ورقة عرض السعر والمشتريات الاحترافي */
+.paper {
+  background: #ffffff;
+  color: #1a202c;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 32px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, .05);
+}
+.paper h3 { margin: 20px 0 8px; font-size: 16px; color: #146c5e; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px; }
+.paper table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; }
+.paper th { background: #f4f7f6; color: #146c5e; font-weight: 700; border-bottom: 2px solid #146c5e; padding: 10px 8px; text-align: start; }
+.paper td { border-bottom: 1px solid #e2e8f0; padding: 9px 8px; text-align: start; }
+.paper tr:nth-child(even) td { background: #fafcfb; }
+.qh { display: flex; justify-content: space-between; align-items: center; gap: 16px; border-bottom: 3px solid #146c5e; padding-bottom: 14px; }
+.qh img { max-height: 76px; max-width: 190px; object-fit: contain; }
+
+@media print {
+  body * { visibility: hidden; }
+  #quote, #quote * { visibility: visible; }
+  #quote { position: absolute; inset: 0 0 auto 0; box-shadow: none; border: 0; padding: 0; }
+  #buy, #buy * { visibility: visible; }
+  #buy { position: absolute; inset: 0 0 auto 0; box-shadow: none; border: 0; padding: 0; }
+  body { background: #fff; }
+}
+
+/* شاشة قفل الترخيص العصرية */
+.lock { display: none; }
+#lic {
+  position: fixed;
+  inset: 0;
+  z-index: 99;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at top right, var(--soft), var(--bg) 60%);
+  padding: 16px;
+}
+#lic .card {
+  max-width: 430px;
+  width: 100%;
+  margin: 0;
+  padding: 28px;
+  border-radius: 20px;
+  box-shadow: var(--shadow-md);
+}
+.lic-logo {
+  width: 52px; height: 52px;
+  border-radius: 14px;
+  background: var(--acc);
+  color: var(--accT);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 14px;
+}
+</style>
+</head>
+<body>
+
+<!-- ==================== شاشة تفعيل الترخيص ==================== -->
+<div id="lic">
+  <div class="card">
+    <div class="lic-logo">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+    </div>
+    <h1 style="margin:0 0 6px;font-size:22px">تفعيل النظام</h1>
+    <p class="note" style="margin:0 0 16px">أدخل الاسم المسجّل لدى البائع ومفتاح الترخيص للمتابعة.</p>
+    <label for="ln">الاسم</label>
+    <input id="ln" type="text" autocomplete="off" placeholder="الاسم المسجل">
+    <label for="lk" style="margin-top:12px">مفتاح الترخيص</label>
+    <input id="lk" type="text" dir="ltr" autocomplete="off" placeholder="XXXXXXX-XXXXXXX-0000">
+    <div class="bar" style="margin-top:16px"><button class="p" id="lb" style="width:100%;min-height:46px">تفعيل النظام</button></div>
+    <p class="note" id="lm" style="color:var(--bad);font-weight:600"></p>
+    <p class="note" style="margin-top:14px;padding-top:12px;border-top:1px solid var(--line)">للحصول على ترخيص: اكتب هنا رقم واتساب أو بريد التواصل</p>
+  </div>
+</div>
+
+<!-- ==================== التطبيق الرئيسي ==================== -->
+<div class="wrap lock" id="app">
+  <!-- الشريط العلوي الموحد -->
+  <header class="topbar noprint">
+    <div class="brand">
+      <div class="brand-ico">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      </div>
+      <div>
+        <h1>نظام التسعير الشامل للورش</h1>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <button class="ib" id="thmBtn" aria-label="تبديل المظهر الليلي/النهاري" title="تبديل المظهر">
+        <svg id="thmIco" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- 1. الشاشة الرئيسية: قائمة المشاريع -->
+  <div id="home">
+    <div class="stats-grid" id="hstats"></div>
+
+    <div class="hrow">
+      <h2 style="margin:0;font-size:20px">المشاريع</h2>
+      <div style="display:flex;gap:8px">
+        <button data-set="1" aria-label="الإعدادات والأسعار">
+          <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/>
+          </svg>
+          <span>الأسعار والإعدادات</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="search-box">
+      <label class="sr" for="hq">ابحث عن مشروع</label>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input id="hq" type="search" placeholder="ابحث باسم العميل، اسم المشروع، أو نوع المنتج...">
+    </div>
+
+    <div class="chips" id="hc"></div>
+    <div id="hl"></div>
+    <button class="p big2" data-pn="1">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      <span>مشروع جديد</span>
+    </button>
+    <div class="foot noprint">Ahmed Yahia</div>
+  </div>
+
+  <!-- 2. شاشة المشروع -->
+  <div id="proj">
+    <div class="bar noprint" id="pbar" style="margin-top:0"></div>
+    <div class="bar noprint" id="tabs">
+      <button data-tab="G">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        <span>المنتجات</span>
+      </button>
+      <button data-tab="P">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        <span>المشتريات</span>
+      </button>
+      <button data-tab="Q">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        <span>عرض السعر</span>
+      </button>
+      <button data-tab="A">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        <span>الفعلي</span>
+      </button>
+      <button data-tab="D">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span>البيانات والأسعار</span>
+      </button>
+    </div>
+
+    <!-- تبويب تفاصيل المطبخ -->
+    <section class="tab" id="tK">
+      <div class="bar noprint" style="margin:0 0 12px;align-items:center">
+        <button data-tab="G">‹ العودة للمنتجات</button>
+        <b id="kname" style="font-size:17px;color:var(--acc)"></b>
+      </div>
+      <div class="card">
+        <h2>أبعاد المطبخ</h2>
+        <div class="row" id="dims"></div>
+        <button class="p" id="gen">تقسيم تلقائي إلى وحدات</button>
+        <p class="note">يوزّع الطول على وحدات متساوية، ولا يمسح الوحدات العمودية. الوحدة الركنية تحتسب بزيادة 50% في الهيكل، ووحدة الجهاز (فرن/غسالة) بنصف مساحة الواجهة.</p>
+      </div>
+      <div class="card">
+        <h2>الوحدات</h2>
+        <div id="units"></div>
+        <div class="bar">
+          <button data-au="base">+ سفلية</button>
+          <button data-au="drawer">+ أدراج</button>
+          <button data-au="wall">+ علوية</button>
+          <button data-au="tall">+ عمودية</button>
+          <button data-au="corner">+ ركنية</button>
+          <button data-au="app">+ وحدة جهاز</button>
+        </div>
+      </div>
+      <div class="card">
+        <h2>مخطط الوحدات</h2>
+        <p class="note" style="margin-top:0">رسم تقريبي من الوحدات التي أدخلتها، ويُرفق بعرض السعر.</p>
+        <div class="paper" id="kdr" style="padding:16px"></div>
+      </div>
+      <div class="card">
+        <h2>الخامات والأنظمة</h2>
+        <div class="row" id="mats"></div>
+        <p class="note" id="nsh"></p>
+      </div>
+      <div class="card">
+        <h2>إكسسوارات إضافية</h2>
+        <div id="ex"></div>
+        <button data-la="ex">+ إكسسوار</button>
+
+        <h2 class="mt">الإضاءة</h2>
+        <div id="li"></div>
+        <button data-la="li">+ إضاءة</button>
+
+        <h2 class="mt">الرخام والسطح</h2>
+        <div class="row" id="st"></div>
+
+        <h2 class="mt">تكاليف إضافية (أي متغير جديد)</h2>
+        <div id="kxc"></div>
+        <button data-la="xc">+ تكلفة إضافية</button>
+      </div>
+    </section>
+
+    <!-- تبويب المنتجات -->
+    <section class="tab" id="tG">
+      <div id="emp"></div>
+      <div id="items"></div>
+      <div class="card noprint" style="padding:14px">
+        <div class="bar" style="margin-top:0">
+          <select id="addT" aria-label="نوع المنتج" style="flex:1"></select>
+          <button class="p" id="addI">+ إضافة منتج</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- تبويب المقارنة الفعلية -->
+    <section class="tab" id="tA">
+      <div class="card">
+        <h2>مقارنة الفعلي بالتقديري</h2>
+        <p class="note" style="margin-top:0">بعد تنفيذ المشروع أدخل ما صرفته فعلًا في كل مجموعة (التكلفة المباشرة، قبل المصاريف غير المباشرة والربح). اترك الخانة فارغة إن لم تعرفها. كلما أدخلت مشاريع أكثر صارت التوصيات أدق.</p>
+        <div id="act"></div>
+      </div>
+      <div class="card" id="actR"></div>
+    </section>
+
+    <!-- تبويب المشتريات -->
+    <section class="tab" id="tP">
+      <div class="card">
+        <h2>قائمة المشتريات</h2>
+        <p class="note" style="margin-top:0">كميات الخامات والإكسسوارات للمشروع الحالي بحسب خياراتك، وتشمل الهالك.</p>
+        <div class="paper" id="buy"></div>
+        <div class="bar noprint">
+          <button class="p" id="bprint">طباعة القائمة</button>
+          <button id="bcopy">نسخ القائمة</button>
+          <button id="bcsv">نسخ كجدول (Excel)</button>
+        </div>
+        <p class="note noprint" id="bmsg"></p>
+      </div>
+    </section>
+
+    <!-- تبويب البيانات والأسعار -->
+    <section class="tab" id="tD">
+      <div class="card">
+        <h2>نسخة احتياطية</h2>
+        <p class="note" style="margin-top:0">احفظ نسخة من كل مشاريعك وأسعارك وبيانات شركتك، واستعدها على أي جهاز أو بعد مسح المتصفح.</p>
+        <div class="bar">
+          <button class="p" id="bx">تصدير نسخة احتياطية</button>
+          <button id="bimp">استيراد من ملف</button>
+        </div>
+        <input type="file" id="bi" accept=".json,application/json" hidden>
+        <input type="file" id="imf" accept="image/*" hidden>
+        <label class="mt">أو الصق نص النسخة هنا</label>
+        <textarea id="bt" rows="3"></textarea>
+        <div class="bar"><button id="btp">استيراد من النص</button></div>
+        <p class="note" id="bm"></p>
+        <div class="bar" id="bc"></div>
+      </div>
+
+      <div class="card">
+        <h2>العملة</h2>
+        <div class="row w">
+          <div><label for="cs">عملة الأسعار</label><select id="cs"></select></div>
+          <div id="ccw" style="display:none"><label for="cc">رمز العملة (يظهر بجانب الأسعار)</label><input id="cc" type="text" maxlength="8"></div>
+        </div>
+        <div class="note" id="cn"></div>
+        <details data-dk="fx">
+          <summary>تحويل كل الأسعار بسعر الصرف</summary>
+          <p class="note" style="margin-top:0">تغيير العملة لا يحوّل الأرقام المُدخلة. إن كانت أسعارك مكتوبة بعملة أخرى فاكتب سعر الصرف (كم تساوي وحدة العملة القديمة بالعملة الجديدة) ثم اضغط تحويل. يُحوَّل ما هو مبلغ مالي: أسعار الخامات والإكسسوارات والأجور والتكاليف الثابتة. أما النسب المئوية والأبعاد وساعات العمل فلا تتغير.</p>
+          <div class="row w"><div><label for="fxr">سعر الصرف</label><input id="fxr" type="number" min="0" step="any" value="1"></div></div>
+          <button id="cvb">تحويل الأسعار</button>
+          <p class="note" id="cvm"></p>
+        </details>
+      </div>
+
+      <div class="card">
+        <h2>بيانات الشركة (تظهر في عرض السعر)</h2>
+        <div class="row">
+          <div><label>اسم الشركة</label><input data-b="C.n" type="text"></div>
+          <div><label>الهاتف</label><input data-b="C.ph" type="text"></div>
+          <div><label>اسم الشركة بالإنجليزية</label><input data-b="C.ne" type="text" dir="ltr"></div>
+          <div><label>الشعار</label><input type="file" accept="image/*" id="lg"></div>
+        </div>
+        <label>الشروط</label><textarea data-b="C.tm" rows="3"></textarea>
+        <label style="margin-top:10px">الشروط بالإنجليزية</label><textarea data-b="C.tme" rows="3" dir="ltr"></textarea>
+        <button class="x mt" id="lgx">حذف الشعار</button>
+      </div>
+
+      <div class="card">
+        <div id="db"></div>
+        <h2 class="mt">التكاليف والمعدلات</h2>
+        <div class="row w" id="rt"></div>
+        <p class="note"><b>خلاصة طريقة التسعير:</b> التكلفة المباشرة = الخامات + الإكسسوارات + العمالة + الماكينات + الكهرباء + النقل والتركيب + البنود الإضافية. السعر قبل الضريبة = التكلفة المباشرة × (1 + المصاريف غير المباشرة%) × (1 + هامش الربح%). الإجمالي = السعر × (1 + الضريبة%).</p>
+        <h2 class="mt">معدلات ومتغيرات إضافية</h2>
+        <p class="note" style="margin-top:0">أضف أي تكلفة جديدة تُطبَّق تلقائيًا على كل المشاريع: مبلغ ثابت، أو لكل م² أو متر طولي أو وحدة، أو نسبة % من التكلفة. في البنود الأخرى: الثابت والوحدة يُحتسبان لكل قطعة، والمتر الطولي هو عرض القطعة.</p>
+        <div id="cx"></div>
+        <button data-cxa="1">+ إضافة معدل / متغير جديد</button>
+        <p class="note">الأسعار الافتراضية للتجربة فقط. هذه القاعدة مشتركة بين كل المشاريع.</p>
+        <button id="reset" class="x mt">إعادة كل القيم الافتراضية</button>
+      </div>
+    </section>
+
+    <!-- تبويب عرض السعر -->
+    <section class="tab" id="tQ">
+      <div id="warn2" class="noprint"></div>
+      <div class="card noprint" id="qset"></div>
+      <div class="bar noprint" style="margin:0 0 12px">
+        <button class="p" id="print">طباعة / حفظ PDF</button>
+        <button id="copy">نسخ نص العرض</button>
+      </div>
+      <div class="paper" id="quote"></div>
+      <p class="note noprint" id="msg">في نافذة الطباعة اختر "حفظ كـ PDF".</p>
+    </section>
+
+    <div class="foot noprint">Ahmed Yahia</div>
+  </div>
+
+  <!-- 3. شريط الملخص السفلي الثابت -->
+  <div id="pbr" class="noprint">
+    <button class="hd" data-bh="1" id="bh" aria-label="عرض تفاصيل السعر" aria-expanded="false"><span></span></button>
+    <div id="bsh" style="display:none">
+      <div class="ln"><span>المطابخ</span><b id="sk"></b></div>
+      <div class="ln"><span>المنتجات الأخرى</span><b id="si"></b></div>
+      <div class="ln" id="dscr" style="display:none"><span>الخصم</span><b id="dsc"></b></div>
+      <div class="ln"><span>المجموع قبل الضريبة</span><b id="sub"></b></div>
+      <div class="ln"><span id="vatl"></span><b id="vat"></b></div>
+      <div class="ln tot"><span>الإجمالي</span><span id="grand"></span></div>
+      <div id="warn"></div>
+      <p class="int" id="info"></p>
+      <details><summary class="int">تفاصيل تكلفة المطابخ</summary><div class="int" id="brk"></div></details>
+    </div>
+    <div class="bt">
+      <div>
+        <div class="note" style="margin:0">الإجمالي شامل الضريبة</div>
+        <div class="big" id="bTot"></div>
+        <div class="note" id="bSub" style="margin:0"></div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button class="wb" id="bW" data-bw="1"></button>
+        <button class="p" data-tab="Q" style="min-height:46px;padding:8px 18px">عرض السعر</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ==========================================================================
+   0. التحكم في المظهر (Theme Switcher)
+   ========================================================================== */
+(function initTheme() {
+  const saved = localStorage.getItem("ws_theme");
+  if (saved) document.documentElement.setAttribute("data-theme", saved);
+  const btn = document.getElementById("thmBtn");
+  const ico = document.getElementById("thmIco");
+  const updateIco = () => {
+    const isDark = document.documentElement.getAttribute("data-theme") === "dark" ||
+      (!document.documentElement.getAttribute("data-theme") && window.matchMedia("(prefers-color-scheme: dark)").matches);
+    ico.innerHTML = isDark
+      ? '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>'
+      : '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
+  };
+  updateIco();
+  btn.onclick = () => {
+    const isDark = document.documentElement.getAttribute("data-theme") === "dark" ||
+      (!document.documentElement.getAttribute("data-theme") && window.matchMedia("(prefers-color-scheme: dark)").matches);
+    const next = isDark ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", next);
+    localStorage.setItem("ws_theme", next);
+    updateIco();
+  };
+})();
+
+/* ==========================================================================
+   1. الأدوات المساعدة والثوابت (Helpers & Constants)
+   ========================================================================== */
+let CUR = "ر.س";
+const $ = id => document.getElementById(id);
+const fm = n => Math.round(n).toLocaleString("en-US");
+const esc = s => String(s).replace(/"/g, "&quot;");
+
+let saveTimer = null;
+const save = () => {
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => {
+    try {
+      localStorage.setItem("ws_v1", JSON.stringify(S));
+    } catch (e) {
+      if ($("msg")) $("msg").textContent = "تعذّر الحفظ (قد يكون الشعار كبيرًا).";
+    }
+  }, 250);
+};
+const saveNow = () => {
+  clearTimeout(saveTimer);
+  try { localStorage.setItem("ws_v1", JSON.stringify(S)); } catch (e) {}
+};
+
+const EN = {
+  "MDF ميلامين 18 مم": "Melamine MDF 18 mm",
+  "بلوك بورد 18 مم": "Blockboard 18 mm",
+  "MDF مقاوم رطوبة 18 مم": "Moisture-resistant MDF 18 mm",
+  "HDF أبيض 6 مم": "White HDF 6 mm",
+  "MDF 8 مم": "MDF 8 mm",
+  "MDF دهان PU": "PU-painted MDF",
+  "أكريليك لامع": "Glossy acrylic",
+  "HPL": "HPL",
+  "ميلامين": "Melamine",
+  "قشرة خشب": "Wood veneer",
+  "إطار ألومنيوم وزجاج": "Aluminium frame with glass",
+  "بدون": "None",
+  "دهان PU": "PU paint",
+  "قشرة جوز": "Walnut veneer",
+  "قشرة بلوط": "Oak veneer",
+  "مفصلة ناعمة الإغلاق": "Soft-close hinge",
+  "سكة درج تلسكوب": "Telescopic drawer slide",
+  "سكة درج مخفية Soft close": "Concealed soft-close drawer slide",
+  "مقبض": "Handle",
+  "رجل قابلة للتعديل": "Adjustable leg",
+  "حامل جداري": "Wall bracket",
+  "رافعة هوائية": "Gas lift",
+  "سلة زاوية سحرية": "Magic corner basket",
+  "مجفف أطباق": "Dish rack",
+  "حاوية نفايات مخفية": "Concealed waste bin",
+  "جرانيت": "Granite",
+  "رخام": "Marble",
+  "كوارتز": "Quartz",
+  "أكريليك صلب": "Solid surface"
+};
+const TYEN = {
+  "طاولة": "Table", "مكتب": "Desk", "كرسي": "Chair",
+  "مكتبة / رفوف": "Bookcase / shelves", "خزانة غرف": "Wardrobe",
+  "ديكور (لوح/جدار)": "Decor panel", "باب": "Door"
+};
+
+function enMig(D) {
+  ["body", "back", "front", "fin", "stone", "hw"].forEach(k =>
+    D[k].forEach(o => { if (!o.en && EN[o.n]) o.en = EN[o.n]; })
+  );
+  D.ty.forEach(y => { if (!y.en && TYEN[y.n]) y.en = TYEN[y.n]; });
+}
+
+const DD = () => ({
+  body: [
+    { n: "MDF ميلامين 18 مم", en: "Melamine MDF 18 mm", p: 120, l: 244, w: 122 },
+    { n: "بلوك بورد 18 مم", en: "Blockboard 18 mm", p: 190, l: 244, w: 122 },
+    { n: "MDF مقاوم رطوبة 18 مم", en: "Moisture-resistant MDF 18 mm", p: 175, l: 244, w: 122 }
+  ],
+  back: [
+    { n: "HDF أبيض 6 مم", en: "White HDF 6 mm", p: 45, l: 244, w: 122 },
+    { n: "MDF 8 مم", en: "MDF 8 mm", p: 60, l: 244, w: 122 }
+  ],
+  front: [
+    { n: "MDF دهان PU", en: "PU-painted MDF", p: 420 },
+    { n: "أكريليك لامع", en: "Glossy acrylic", p: 380 },
+    { n: "HPL", en: "HPL", p: 300 },
+    { n: "ميلامين", en: "Melamine", p: 150 },
+    { n: "قشرة خشب", en: "Wood veneer", p: 350 },
+    { n: "إطار ألومنيوم وزجاج", en: "Aluminium frame with glass", p: 600 }
+  ],
+  fin: [
+    { n: "بدون", en: "None", p: 0 },
+    { n: "دهان PU", en: "PU paint", p: 70 },
+    { n: "قشرة جوز", en: "Walnut veneer", p: 90 },
+    { n: "قشرة بلوط", en: "Oak veneer", p: 90 },
+    { n: "أكريليك لامع", en: "Glossy acrylic", p: 110 }
+  ],
+  hw: [
+    { n: "مفصلة ناعمة الإغلاق", en: "Soft-close hinge", p: 14, r: "hinge" },
+    { n: "سكة درج تلسكوب", en: "Telescopic drawer slide", p: 45, r: "slide" },
+    { n: "سكة درج مخفية Soft close", en: "Concealed soft-close drawer slide", p: 95, r: "slide" },
+    { n: "مقبض", en: "Handle", p: 20, r: "handle" },
+    { n: "رجل قابلة للتعديل", en: "Adjustable leg", p: 4, r: "leg" },
+    { n: "حامل جداري", en: "Wall bracket", p: 10, r: "bracket" },
+    { n: "رافعة هوائية", en: "Gas lift", p: 60, r: "" },
+    { n: "سلة زاوية سحرية", en: "Magic corner basket", p: 900, r: "" },
+    { n: "مجفف أطباق", en: "Dish rack", p: 350, r: "" },
+    { n: "حاوية نفايات مخفية", en: "Concealed waste bin", p: 300, r: "" }
+  ],
+  stone: [
+    { n: "جرانيت", en: "Granite", p: 600 },
+    { n: "رخام", en: "Marble", p: 900 },
+    { n: "كوارتز", en: "Quartz", p: 1100 },
+    { n: "أكريليك صلب", en: "Solid surface", p: 1500 }
+  ],
+  light: [
+    { n: "شريط LED (للمتر)", p: 35 },
+    { n: "سبوت (للقطعة)", p: 25 },
+    { n: "محول كهرباء", p: 60 }
+  ],
+  xc: [
+    { n: "نقل إضافي (رحلة)", p: 150 },
+    { n: "عمالة خارجية (يوم)", p: 200 },
+    { n: "قياس ومعاينة", p: 100 },
+    { n: "تصميم ثلاثي الأبعاد", p: 300 }
+  ],
+  uc: { base: [], drawer: [], wall: [], tall: [], corner: [], app: [] },
+  ty: [
+    ["طاولة", "table", 160, 75, 80, 0, 150, 1.5, 3, .15],
+    ["مكتب", "table", 140, 75, 60, 0, 300, 1.6, 3, .15],
+    ["كرسي", "chair", 45, 90, 45, 0, 60, 2.5, 4, .12],
+    ["مكتبة / رفوف", "open", 100, 200, 30, 4, 100, 1.6, 4, .2],
+    ["خزانة غرف", "box", 200, 240, 60, 4, 1200, 1.8, 5, .2],
+    ["ديكور (لوح/جدار)", "panel", 200, 250, 3, 0, 0, 2, 2, .25],
+    ["باب", "door", 90, 210, 4, 0, 400, 1.6, 3.5, .15]
+  ].map((a, i) => ({
+    n: a[0],
+    en: ["Table", "Desk", "Chair", "Bookcase / shelves", "Wardrobe", "Decor panel", "Door"][i],
+    f: a[1], w: a[2], h: a[3], d: a[4], s: a[5], hw: a[6], lab: a[7], edge: a[8], cnc: a[9], cp: []
+  }))
+});
+
+const RR = () => ({
+  sheet: 2.977, wB: 15, wF: 10, edgeP: 2.5, eB: 4, eF: 4.5,
+  labB: 1.2, labF: 1, labD: 1, cncH: 0.2, labR: 35, macR: 40,
+  kW: 8, tariff: 0.18, cutP: 150, trans: 400, instM: 150,
+  oh: 10, mg: 25, vat: 15, minMg: 15, maxDisc: 15, lmMin: 0, lmMax: 0, cx: []
+});
+
+const RL = {
+  sheet: "مساحة لوح افتراضية م²", wB: "هالك الألواح %", wF: "هالك الواجهات %",
+  edgeP: "سعر متر الحافة", eB: "متر حافة/م² هيكل", eF: "متر حافة/م² واجهات",
+  labB: "ساعات عمل/م² هيكل", labF: "ساعات عمل/م² واجهات", labD: "ساعات عمل/درج",
+  cncH: "ساعات ماكينة/م² (مطبخ)", labR: "أجرة ساعة العمل", macR: "تشغيل الماكينة/ساعة",
+  kW: "قدرة الماكينة kW", tariff: "سعر kWh", cutP: "قص رخام/فتحة",
+  trans: "نقل المطبخ", instM: "تركيب/متر طولي", oh: "مصاريف غير مباشرة %",
+  mg: "هامش الربح %", vat: "الضريبة %", minMg: "أدنى هامش ربح مقبول %",
+  maxDisc: "أقصى خصم مقبول %", lmMin: "أقل سعر معتاد للمتر الطولي (0 = إيقاف التنبيه)",
+  lmMax: "أعلى سعر معتاد للمتر الطولي"
+};
+
+const RH = {
+  sheet: "تُستخدم فقط إن لم يكن للوح مقاس. مقاس كل لوح يُحدَّد في قائمة الألواح",
+  wB: "عدد الألواح = المساحة × (1 + الهالك%) ÷ مساحة اللوح، ويشمل المنتجات الأخرى",
+  wF: "تكلفة الواجهات = مساحتها × (1 + هذا%) × سعر المتر المربع",
+  edgeP: "تكلفة الحواف = أمتار الحافة × هذا السعر، ويشمل المنتجات الأخرى",
+  eB: "أمتار حافة الهيكل = مساحة الهيكل (م²) × هذا الرقم (المطبخ)",
+  eF: "أمتار حافة الواجهات = مساحتها (م²) × هذا الرقم (المطبخ)",
+  labB: "ساعات عمل الهيكل = مساحته (م²) × هذا الرقم (المطبخ)",
+  labF: "ساعات عمل الواجهات = مساحتها (م²) × هذا الرقم (المطبخ)",
+  labD: "ساعات إضافية = عدد الأدراج × هذا الرقم (المطبخ)",
+  cncH: "ساعات الماكينة = (هيكل + واجهات بالم²) × هذا الرقم (المطبخ)",
+  labR: "تكلفة العمالة = ساعات العمل × هذا السعر، ويشمل المنتجات الأخرى",
+  macR: "تكلفة الماكينات = ساعات الماكينة × هذا السعر، ويشمل المنتجات الأخرى",
+  kW: "الكهرباء = ساعات الماكينة × هذا الرقم × سعر kWh",
+  tariff: "سعر كيلووات ساعة، يدخل في معادلة الكهرباء",
+  cutP: "عدد الفتحات × هذا الرقم، يُضاف إلى تكلفة الرخام",
+  trans: "مبلغ ثابت يُضاف لكل مطبخ",
+  instM: "التركيب = (طول السفلي + العلوي بالمتر) × هذا الرقم",
+  oh: "تُضاف على مجموع التكاليف المباشرة (مطبخ وبنود)",
+  mg: "تُضاف على (التكلفة + المصاريف غير المباشرة)",
+  vat: "تُضاف على السعر النهائي قبل الضريبة",
+  minMg: "تنبيه إذا قلّ هامش الربح (بعد الخصم) عن هذا الرقم",
+  maxDisc: "تنبيه إذا زاد الخصم عن هذه النسبة من السعر",
+  lmMin: "تنبيه إذا قلّ سعر المتر الطولي للمطبخ عن هذا الرقم",
+  lmMax: "تنبيه إذا زاد سعر المتر الطولي عن هذا الرقم"
+};
+
+const UD = {
+  base: ["سفلية", 72, 56, 1, 2, 0],
+  drawer: ["أدراج", 72, 56, 0, 0, 3],
+  wall: ["علوية", 72, 32, 1, 2, 0],
+  tall: ["عمودية", 210, 56, 4, 2, 0],
+  corner: ["ركنية", 72, 56, 1, 2, 0],
+  app: ["وحدة جهاز", 72, 56, 1, 1, 1]
+};
+const TM = { corner: [1.5, 1], app: [1, .5] };
+const LB = { w: "العرض", h: "الارتفاع", d: "العمق", sh: "أرفف", dr: "أبواب", dw: "أدراج" };
+const FM = [
+  ["box", "صندوق مغلق"], ["open", "مفتوح (رفوف)"], ["table", "طاولة / مكتب"],
+  ["chair", "كرسي"], ["panel", "لوح / ديكور"], ["door", "باب"]
+];
+const STS = [
+  ["draft", "مسودة"], ["sent", "عرض مرسل"], ["accepted", "مقبول"],
+  ["progress", "قيد التنفيذ"], ["done", "مسلّم"]
+];
+const CURS = [
+  ["ر.س", "ريال سعودي", 15, "SAR"], ["ج.م", "جنيه مصري", 14, "EGP"],
+  ["د.إ", "درهم إماراتي", 5, "AED"], ["د.ك", "دينار كويتي", 0, "KWD"],
+  ["ر.ق", "ريال قطري", 0, "QAR"], ["د.ب", "دينار بحريني", 10, "BHD"],
+  ["ر.ع", "ريال عماني", 5, "OMR"], ["د.أ", "دينار أردني", 16, "JOD"],
+  ["$", "دولار أمريكي", null, "USD"], ["€", "يورو", null, "EUR"]
+];
+const DBL = [
+  ["body", "ألواح الهيكل والأرفف (سعر ومقاس اللوح)"],
+  ["back", "ألواح الظهر (سعر ومقاس اللوح)"],
+  ["front", "واجهات المطبخ (سعر م²)"],
+  ["fin", "تشطيبات وقشرة (سعر م²)"],
+  ["hw", "إكسسوارات ومفصلات وسكك (سعر الوحدة)"],
+  ["stone", "رخام وأحجار (سعر م²)"],
+  ["light", "إضاءة (سعر الوحدة أو المتر)"],
+  ["xc", "تكاليف وخدمات إضافية جاهزة (سعر الوحدة)"]
+];
+const ROLE = { "": "إضافي", hinge: "مفصلة", slide: "سكة", handle: "مقبض", leg: "رجل", bracket: "حامل" };
+const CT = { fix: "مبلغ ثابت", m2: "لكل م²", ml: "لكل متر طولي", pc: "لكل وحدة/قطعة", pct: "% من التكلفة" };
+const CS = { b: "المطبخ والبنود", k: "المطبخ فقط", i: "البنود فقط" };
+const CU = { fix: "مبلغ لكل وحدة", m2: "لكل م²", ml: "لكل متر طولي" };
+
+/* ==========================================================================
+   2. إدارة البيانات والمشاريع (State Management & Migration)
+   ========================================================================== */
+const mu = (t, w) => {
+  const u = UD[t];
+  return { t, w, n: u[0], h: u[1], d: u[2], sh: u[3], dr: u[4] ? (t == "tall" || w >= 60 ? 2 : 1) : 0, dw: u[5] };
+};
+
+function gen(p) {
+  const nb = Math.max(1, Math.round(p.low / p.uw));
+  const w = Math.floor(p.low / nb);
+  const na = Math.round(p.up / p.uw);
+  const wa = na ? Math.floor(p.up / na) : 0;
+  const u = p.units.filter(x => x.t == "tall");
+  for (let i = 0; i < nb; i++) u.push(mu(i < p.dn ? "drawer" : "base", w));
+  for (let i = 0; i < na; i++) u.push(mu("wall", wa));
+  p.units = u;
+}
+
+const PP = () => ({
+  stt: "draft", cd: 0,
+  fa: { mat: "", hw: "", stone: "", labor: "", site: "", other: "", hl: "", hm: "", sh: "" },
+  qn: "", ql: "ar", dg: true, qv: 15, dv: 0, dt: "pct", dr: "",
+  pk: {
+    on: false,
+    l: [
+      { n: "اقتصادي", body: 0, front: 3, fin: 0, stone: 0, slide: 1 },
+      { n: "متوسط", body: 2, front: 2, fin: 0, stone: 2, slide: 2 },
+      { n: "فاخر", body: 1, front: 0, fin: 1, stone: 1, slide: 2 }
+    ]
+  },
+  pay: [
+    { n: "عند التعاقد", p: 50, en: "On contract signing" },
+    { n: "عند التوريد قبل التركيب", p: 30, en: "On delivery, before installation" },
+    { n: "عند التسليم", p: 20, en: "On handover" }
+  ]
+});
+
+const mkK = n => {
+  const k = {
+    k: 1, q: 1, name: n || "المطبخ", low: 300, up: 240, uw: 60, dn: 1, pl: 10, cr: 0,
+    units: [], body: 0, back: 0, front: 0, fin: 0,
+    o: { hinge: 0, slide: 1, handle: 3, leg: 4, bracket: 5 },
+    ex: [{ i: 7, q: 1 }, { i: 9, q: 1 }],
+    li: [{ i: 0, q: 5 }, { i: 1, q: 6 }],
+    st: { len: 0, depth: 60, bs: 10, m: 0, cuts: 2 },
+    xc: [], ns: 0, nk: 0
+  };
+  gen(k);
+  return k;
+};
+
+const mkI = t => {
+  const y = D.ty[t] || D.ty[0];
+  return { t, name: "", q: 1, w: y.w, h: y.h, d: y.d, s: y.s, b: 0, f: 0, sh: 0, hw: y.hw, ov: 0, ac: [], xc: [] };
+};
+
+const newP = n => {
+  const p = PP();
+  p.cd = Date.now();
+  return { n, P: p, G: [] };
+};
+
+function migP(p) {
+  const q = p.P || (p.P = {});
+  const F = ["low", "up", "uw", "dn", "pl", "cr", "units", "body", "back", "front", "fin", "o", "ex", "li", "st", "xc", "ns", "nk"];
+  if (q.units && !p.G.some(x => x.k) && q.on !== false) {
+    const k = mkK("المطبخ");
+    F.forEach(f => { if (q[f] !== undefined) k[f] = q[f]; });
+    p.G.unshift(k);
+  }
+  F.concat(["on"]).forEach(f => { delete q[f]; });
+}
+
+const S0 = () => ({
+  D: DD(), R: RR(),
+  co: {
+    n: "", ph: "", lg: "", cur: "ر.س", ne: "",
+    tme: "Offer valid for 15 days. 50% advance payment on contract signing, balance on handover.",
+    tm: "صلاحية العرض 15 يومًا. دفعة مقدمة 50% عند التعاقد والباقي عند التسليم."
+  },
+  cur: 0,
+  pr: [newP("مشروع 1")]
+});
+
+let S = S0(), D, R, C, P, G, T = {}, K = null, KI = null, VW = "home", HF = "all", HQ = "", TAB = "K";
+
+const norm = s => {
+  s.R = Object.assign(RR(), s.R);
+  s.D = Object.assign(DD(), s.D);
+  s.D.ty.forEach(y => { y.cp = y.cp || []; });
+  ["body", "back"].forEach(k => s.D[k].forEach(o => {
+    if (!(o.l > 0 && o.w > 0)) {
+      o.l = 244;
+      o.w = Math.round(s.R.sheet * 1e4 / 244 * 10) / 10;
+    }
+  }));
+  enMig(s.D);
+  s.co = Object.assign(S0().co, s.co);
+  s.pr.forEach(p => {
+    p.G = (p.G || []).map(x => x.k ? x : ({ xc: [], ...x }));
+    migP(p);
+    p.P = Object.assign(PP(), p.P);
+  });
+  if (!(s.cur >= 0 && s.cur < s.pr.length)) s.cur = 0;
+  return s;
+};
+
+try {
+  const s = JSON.parse(localStorage.getItem("ws_v1") || "null");
+  if (s && s.D && s.pr && s.pr.length) S = norm(s);
+} catch (e) {}
+
+const use = () => {
+  const c = S.pr[S.cur];
+  P = c.P; G = c.G; D = S.D; R = S.R; C = S.co;
+  CUR = C.cur || "ر.س";
+  KI = null; K = null;
+};
+use();
+
+/* ==========================================================================
+   3. المحرك الحسابي للتسعير (Pricing Calculation Engine)
+   ========================================================================== */
+const sa = o => (o && o.l > 0 && o.w > 0) ? (o.l * o.w / 1e4) : R.sheet;
+const GM = {
+  "ألواح الهيكل والأرفف والسوكل": "mat", "ظهر المطبخ": "mat",
+  "واجهات وأبواب وأدراج": "mat", "تشطيبات إضافية": "mat", "شريط الحواف": "mat",
+  "مفصلات وسكك ومقابض وأرجل": "hw", "إكسسوارات إضافية": "hw", "إضاءة": "hw",
+  "رخام": "stone",
+  "عمالة التصنيع": "labor", "تشغيل الماكينات": "labor", "كهرباء": "labor",
+  "نقل": "site", "تركيب": "site"
+};
+
+function kc(K) {
+  const UK = {}, a = { body: 0, back: 0, fr: 0, hn: 0, sl: 0, hd: 0, lg: 0, br: 0, dw: 0 };
+  K.units.forEach(u => {
+    const w = u.w, h = u.h, d = u.d;
+    const bs = !(u.t == "wall" || u.t == "tall");
+    const m = TM[u.t] || [1, 1];
+    const b0 = a.body, f0 = a.fr;
+
+    a.body += m[0] * (2 * h * d + (bs ? w * d + 20 * w : 2 * w * d) + u.sh * w * d + u.dw * (2 * (d - 5) * 15 + 2 * (w - 10) * 15 + (w - 5) * (d - 5))) / 1e4;
+    a.back += w * h / 1e4;
+    a.fr += m[1] * w * h * .97 / 1e4;
+    a.hn += u.dr * (h > 180 ? 5 : h > 100 ? 3 : 2);
+    a.sl += u.dw;
+    a.hd += u.dr + u.dw;
+    a.lg += u.t == "wall" ? 0 : 4;
+    a.br += u.t == "wall" ? 2 : 0;
+    a.dw += u.dw;
+
+    const ua = a.body - b0 + a.fr - f0;
+    (D.uc[u.t] || []).forEach(c => {
+      const v = +c.v || 0, k = c.n || "بند";
+      UK[k] = (UK[k] || 0) + v * (c.t == "m2" ? ua : c.t == "ml" ? w / 100 : 1);
+    });
+  });
+
+  a.body += K.pl * K.low / 1e4;
+  a.fr += K.cr * K.up / 1e4;
+
+  const pk = (k, i) => D[k][i] || D[k][0] || { p: 0 };
+  const o = r => pk("hw", K.o[r]).p;
+  const sbA = sa(pk("body", K.body)), skA = sa(pk("back", K.back));
+  const sbE = a.body * (1 + R.wB / 100) / sbA;
+  const skE = a.back * (1 + R.wB / 100) / skA;
+  const sb = +K.ns > 0 ? +K.ns : sbE;
+  const sk = +K.nk > 0 ? +K.nk : skE;
+  const hL = a.body * R.labB + a.fr * R.labF + a.dw * R.labD;
+  const hM = (a.body + a.fr) * R.cncH;
+  const sl = K.st.len || K.low;
+  const sm = (L, arr) => K[L].reduce((s, l) => s + (arr[l.i] ? arr[l.i].p * l.q : 0), 0);
+
+  const c = {
+    "ألواح الهيكل والأرفف والسوكل": sb * pk("body", K.body).p,
+    "ظهر المطبخ": sk * pk("back", K.back).p,
+    "واجهات وأبواب وأدراج": a.fr * (1 + R.wF / 100) * pk("front", K.front).p,
+    "تشطيبات إضافية": a.fr * pk("fin", K.fin).p,
+    "شريط الحواف": (a.body * R.eB + a.fr * R.eF) * R.edgeP,
+    "مفصلات وسكك ومقابض وأرجل": a.hn * o("hinge") + a.sl * o("slide") + a.hd * o("handle") + a.lg * o("leg") + a.br * o("bracket"),
+    "إكسسوارات إضافية": sm("ex", D.hw),
+    "رخام": sl * (K.st.depth + K.st.bs) / 1e4 * pk("stone", K.st.m).p + K.st.cuts * R.cutP,
+    "إضاءة": sm("li", D.light),
+    "عمالة التصنيع": hL * R.labR,
+    "تشغيل الماكينات": hM * R.macR,
+    "كهرباء": hM * R.kW * R.tariff,
+    "نقل": +R.trans,
+    "تركيب": (K.low + K.up) / 100 * R.instM
+  };
+
+  Object.keys(UK).forEach(k => { c[k] = (c[k] || 0) + UK[k]; });
+  if (K.xc.length) c["تكاليف إضافية"] = sm("xc", D.xc);
+
+  const AR2 = a.body + a.fr, LM = (K.low + K.up) / 100, nk = x => x.n || "متغير";
+  R.cx.forEach(x => {
+    if (x.s == "i" || x.t == "pct") return;
+    c[nk(x)] = (c[nk(x)] || 0) + (+x.v || 0) * (x.t == "m2" ? AR2 : x.t == "ml" ? LM : x.t == "pc" ? K.units.length : 1);
+  });
+
+  const pre = Object.values(c).reduce((s, v) => s + v, 0);
+  R.cx.forEach(x => {
+    if (x.s != "i" && x.t == "pct") c[nk(x)] = (c[nk(x)] || 0) + pre * (+x.v || 0) / 100;
+  });
+
+  const dc = Object.values(c).reduce((s, v) => s + v, 0);
+  const g = { mat: 0, hw: 0, stone: 0, labor: 0, site: 0, other: 0 };
+  Object.keys(c).forEach(n => { g[GM[n] || "other"] += c[n]; });
+  const pr = dc * (1 + R.oh / 100) * (1 + R.mg / 100);
+
+  return { kit: true, q: 1, cost: dc, sell: pr, hl: hL, hm: hM, c, dc, g, pr, sb, sk, sbE, skE, sbA, skA, hL, hM, a };
+}
+
+function ci(x) {
+  const y = D.ty[x.t] || D.ty[0];
+  const w = x.w, h = x.h, d = x.d, f = y.f;
+  let a;
+  if (f == "box") a = 2 * d * h + 2 * w * d + 2 * w * h + x.s * w * d;
+  else if (f == "open") a = 2 * d * h + 2 * w * d + w * h + x.s * w * d;
+  else if (f == "table") a = w * d + 2 * (w + d) * 10 + 4 * h * 8;
+  else if (f == "chair") a = w * d + w * Math.max(h - 45, 0) + 900 + 2 * (w + d) * 7;
+  else if (f == "door") a = w * h * 1.15;
+  else a = w * h;
+
+  a = +x.ov > 0 ? +x.ov : a / 1e4;
+  const bd = D.body[x.b] || D.body[0], fn = D.fin[x.f] || D.fin[0];
+  const sA = sa(bd), est = a * (1 + R.wB / 100) / sA;
+  const sh = +x.sh > 0 ? +x.sh : est;
+  const hw = (+x.hw || 0) + (x.ac || []).reduce((s, l) => s + (D.hw[l.i] ? D.hw[l.i].p * l.q : 0), 0);
+  const u = sh * bd.p + a * fn.p + a * y.edge * R.edgeP + a * y.lab * R.labR + a * y.cnc * (R.macR + R.kW * R.tariff) + hw;
+  const xs = (x.xc || []).reduce((s, l) => s + (D.xc[l.i] ? D.xc[l.i].p * l.q : 0), 0);
+  const cr = R.cx.filter(c => c.s != "k").concat(y.cp || []);
+  const u2 = u + xs + cr.reduce((s, c) => s + (c.t == "pct" ? 0 : (+c.v || 0) * (c.t == "m2" ? a : c.t == "ml" ? w / 100 : 1)), 0);
+  const u3 = u2 * (1 + cr.filter(c => c.t == "pct").reduce((s, c) => s + (+c.v || 0), 0) / 100);
+  const q = +x.q || 1, cost = u3 * q;
+  const gm = (sh * bd.p + a * fn.p + a * y.edge * R.edgeP) * q;
+  const gl = (a * y.lab * R.labR + a * y.cnc * (R.macR + R.kW * R.tariff)) * q;
+  const gh = hw * q;
+
+  return { a, est, sh, sA, q, cost, g: { mat: gm, hw: gh, labor: gl, other: cost - gm - gl - gh }, hl: a * y.lab * q, hm: a * y.cnc * q, sell: cost * (1 + R.oh / 100) * (1 + R.mg / 100) };
+}
+
+/* ==========================================================================
+   4. بناء الواجهة والتحديث الذكي (Optimized UI & Lazy Tab Rendering)
+   ========================================================================== */
+const sel = (arr, cur, path, f) => `<select data-b="${path}" data-n="1">${arr.map((o, i) => f && !f(o) ? "" : `<option value="${i}"${i == cur ? " selected" : ""}>${o.n}${o.l > 0 && o.w > 0 ? " (" + o.l + "×" + o.w + ")" : ""}</option>`).join("")}</select>`;
+const fl = (l, path, v) => `<div><label>${l}</label><input type="number" data-b="${path}" value="${v}" min="0" step="any" inputmode="decimal"></div>`;
+const fc = (l, h) => `<div><label>${l}</label>${h}</div>`;
+const lines = (arr, L, pre, del) => L.map((l, j) => `<div class="thr">${sel(arr, l.i, `${pre}.${j}.i`)}<input type="number" data-b="${pre}.${j}.q" value="${l.q}" min="0" step="any" aria-label="الكمية"><button class="x" data-${del}="${j}" aria-label="حذف">✕</button></div>`).join("");
+const cxh = c => {
+  const v = +c.v || 0;
+  return {
+    fix: "= " + v + " مبلغ ثابت (مرة للمطبخ، ولكل قطعة في البنود)",
+    m2: "= " + v + " × المساحة بالم² (المطبخ: هيكل + واجهات)",
+    ml: "= " + v + " × الطول بالمتر (المطبخ: السفلي + العلوي، البنود: عرض القطعة)",
+    pc: "= " + v + " × عدد الوحدات (المطبخ) أو لكل قطعة (البنود)",
+    pct: "= " + v + "% من التكلفة المباشرة قبل هذا البند"
+  }[c.t] || "";
+};
+const cpRows = (pre, arr, key, ts) => (arr || []).map((c, j) => `<div class="thr h"><input type="text" data-b="${pre}.${j}.n" value="${esc(c.n)}" aria-label="اسم البند"><input type="number" data-b="${pre}.${j}.v" value="${c.v}" step="any" aria-label="القيمة"><select data-b="${pre}.${j}.t">${Object.keys(ts).map(k => `<option value="${k}"${k == c.t ? " selected" : ""}>${ts[k]}</option>`).join("")}</select><button class="x" data-cpd="${key}:${j}" aria-label="حذف">✕</button></div>`).join("");
+
+const DIRTY = { K: true, G: true, P: true, A: true, D: true, Q: true };
+const markDirty = (...tabs) => {
+  if (!tabs.length) ["K", "G", "P", "A", "D", "Q"].forEach(t => DIRTY[t] = true);
+  else tabs.forEach(t => DIRTY[t] = true);
+};
+
+function show(t) {
+  TAB = t;
+  ["K", "G", "P", "A", "D", "Q"].forEach(k => {
+    $("t" + k).classList.toggle("on", k == t);
+  });
+  document.querySelectorAll("#tabs button").forEach(b =>
+    b.classList.toggle("on", b.dataset.tab == (t == "K" ? "G" : t))
+  );
+  renderActiveTab();
+}
+
+function bar() {
+  $("pbar").innerHTML = `<button class="ib" data-home="1" aria-label="رجوع إلى المشاريع"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button><input type="text" data-b="PR.n" value="${esc(S.pr[S.cur].n)}" aria-label="اسم المشروع / العميل" style="flex:1 1 160px;font-weight:700"><select data-b="P.stt" aria-label="حالة المشروع" style="flex:0 1 150px">${STS.map(s => `<option value="${s[0]}"${P.stt == s[0] ? " selected" : ""}>${s[1]}</option>`).join("")}</select><button data-pc="1">نسخ</button><button class="x" data-pd="1">حذف</button>`;
+}
+
+function rk() {
+  if (!K) return;
+  $("dims").innerHTML = fl("طول السفلي (سم)", "K.low", K.low) + fl("طول العلوي (سم)", "K.up", K.up) + fl("عرض الوحدة المعتاد", "K.uw", K.uw) + fl("وحدات الأدراج", "K.dn", K.dn) + fl("ارتفاع السوكل (سم)", "K.pl", K.pl) + fl("ارتفاع الكورنيش (سم)", "K.cr", K.cr);
+  $("units").innerHTML = K.units.map((u, i) => `<div class="u"><div class="nm"><label>الاسم / النوع</label><input type="text" data-b="K.units.${i}.n" value="${esc(u.n)}"></div>${Object.keys(LB).map(k => fl(LB[k], `K.units.${i}.${k}`, u[k])).join("")}<button class="x" data-du="${i}" aria-label="حذف">✕</button></div>`).join("");
+  const rs = (r, c) => sel(D.hw, c, "K.o." + r, o => o.r == r);
+  $("mats").innerHTML = fc("ألواح الهيكل", sel(D.body, K.body, "K.body")) + fc("ألواح الظهر", sel(D.back, K.back, "K.back")) + fc("الواجهات", sel(D.front, K.front, "K.front")) + fc("تشطيب إضافي", sel(D.fin, K.fin, "K.fin")) + fc("المفصلة", rs("hinge", K.o.hinge)) + fc("سكة الدرج", rs("slide", K.o.slide)) + fc("المقبض", rs("handle", K.o.handle)) + fc("الرجل", rs("leg", K.o.leg)) + fc("الحامل الجداري", rs("bracket", K.o.bracket)) + fl("ألواح الهيكل من التقطيع (اختياري)", "K.ns", K.ns) + fl("ألواح الظهر من التقطيع (اختياري)", "K.nk", K.nk);
+  $("ex").innerHTML = lines(D.hw, K.ex, "K.ex", "dx");
+  $("li").innerHTML = lines(D.light, K.li, "K.li", "dli");
+  $("kxc").innerHTML = lines(D.xc, K.xc, "K.xc", "dxc");
+  $("st").innerHTML = fc("الخامة", sel(D.stone, K.st.m, "K.st.m")) + fl("الطول سم (0 = طول السفلي)", "K.st.len", K.st.len) + fl("العمق (سم)", "K.st.depth", K.st.depth) + fl("ظهر السطح (سم)", "K.st.bs", K.st.bs) + fl("فتحات (حوض/فرن)", "K.st.cuts", K.st.cuts);
+}
+
+const kcard = (x, i) => `<div class="card it"><div class="thr"><input type="text" data-b="G.${i}.name" value="${esc(x.name)}" placeholder="اسم المطبخ" aria-label="اسم المطبخ" style="font-weight:700"><span class="bd s-accepted" style="justify-self:start">مطبخ</span><span></span></div><div class="res" id="r${i}"></div><div class="bar"><button class="p" data-ke="${i}">تعديل المطبخ والوحدات</button><button data-gc="${i}">نسخ</button><button class="x" data-gd="${i}">حذف</button></div></div>`;
+
+function renderItems() {
+  const at = $("addT").value;
+  $("addT").innerHTML = '<option value="k">مطبخ</option>' + D.ty.map((o, j) => `<option value="${j}">${esc(o.n)}</option>`).join("");
+  if (at) $("addT").value = at;
+
+  $("emp").innerHTML = G.length ? "" : '<div class="card" style="text-align:center;padding:28px"><p style="margin:0;color:var(--mut)">لا توجد منتجات في هذا المشروع بعد.<br>اختر نوع المنتج (مطبخ أو غيره) من القائمة بالأسفل ثم اضغط <b>"+ إضافة منتج"</b>.</p></div>';
+  $("items").innerHTML = G.map((x, i) => {
+    if (x.k) return kcard(x, i);
+    const y = D.ty[x.t] || D.ty[0], kw = y.f == "box" || y.f == "open", g = `G.${i}.`;
+    return `<div class="card it"><div class="thr"><input type="text" data-b="${g}name" value="${esc(x.name)}" placeholder="وصف البند" style="font-weight:700"><select data-ty="${i}" aria-label="النوع">${D.ty.map((o, j) => `<option value="${j}"${j == x.t ? " selected" : ""}>${o.n}</option>`).join("")}</select><span></span></div>
+    <div class="row">${fl("العرض/الطول (سم)", g + "w", x.w) + fl("الارتفاع (سم)", g + "h", x.h) + fl("العمق (سم)", g + "d", x.d) + (kw ? fl("أرفف", g + "s", x.s) : "") + fl("الكمية", g + "q", x.q)}</div>
+    <div class="row">${fc("اللوح", sel(D.body, x.b, g + "b")) + fl("عدد الألواح للوحدة (اختياري)", g + "sh", x.sh) + fc("التشطيب / القشرة", sel(D.fin, x.f, g + "f")) + fl("إكسسوارات أخرى للوحدة", g + "hw", x.hw) + fl("مساحة يدوية م²", g + "ov", x.ov)}</div>
+    <label>الإكسسوارات</label>${lines(D.hw, x.ac, g + "ac", "da" + i)}<button data-aa="${i}">+ إكسسوار</button>
+    <label style="margin-top:10px">تكاليف إضافية</label>${lines(D.xc, x.xc || [], g + "xc", "dc" + i)}<button data-xa="${i}">+ تكلفة إضافية</button>
+    ${(y.cp || []).length ? `<p class="note">بنود النوع المضافة تلقائيًا: ${y.cp.map(c => esc(c.n)).join("، ")}</p>` : ""}<div class="res" id="r${i}"></div><div class="bar"><button class="x" data-gd="${i}">حذف</button><button data-gc="${i}">نسخ</button></div></div>`;
+  }).join("");
+}
+
+function dbRow(k, o, i) {
+  const g = "D." + k + "." + i + ".", x = `<button class="x" data-dbrm="${k}:${i}" aria-label="حذف">✕</button>`;
+  if (k == "hw") return `<div class="thr h"><input type="text" data-b="${g}n" value="${esc(o.n)}"><input type="number" data-b="${g}p" value="${o.p}" min="0" step="any"><select data-b="${g}r">${Object.keys(ROLE).map(r => `<option value="${r}"${r == o.r ? " selected" : ""}>${ROLE[r]}</option>`).join("")}</select>${x}</div>`;
+  if (["body", "back", "front", "fin", "stone"].indexOf(k) < 0) return `<div class="thr"><input type="text" data-b="${g}n" value="${esc(o.n)}"><input type="number" data-b="${g}p" value="${o.p}" min="0" step="any">${x}</div>`;
+  const sz = k == "body" || k == "back" ? `<input type="number" data-b="${g}l" value="${o.l}" min="1" step="any" placeholder="الطول سم" aria-label="الطول سم" title="الطول سم" style="flex:1 1 80px"><input type="number" data-b="${g}w" value="${o.w}" min="1" step="any" placeholder="العرض سم" aria-label="العرض سم" title="العرض سم" style="flex:1 1 80px">` : "";
+  const im = k == "front" || k == "stone" || k == "fin" ? (o.im ? `<span class="imc"><img src="${o.im}" alt="" style="height:38px;border-radius:6px"><button class="x" data-imx="${k}:${i}" aria-label="حذف الصورة">✕</button></span>` : `<button data-imu="${k}:${i}">+ صورة</button>`) : "";
+  return `<div class="rw"><input type="text" data-b="${g}n" value="${esc(o.n)}" placeholder="الاسم" aria-label="الاسم" style="flex:2 1 160px"><input type="text" dir="ltr" data-b="${g}en" value="${esc(o.en || "")}" placeholder="English name" aria-label="English name" style="flex:2 1 140px"><input type="number" data-b="${g}p" value="${o.p}" min="0" step="any" placeholder="السعر" aria-label="السعر" style="flex:1 1 90px">${sz}${im}${x}</div>`;
+}
+
+function renderDB() {
+  $("db").innerHTML = DBL.map(([k, t]) => `<details class="mt" data-dk="${k}"${DO[k] ? " open" : ""}><summary>${t}</summary>` + D[k].map((o, i) => dbRow(k, o, i)).join("") + `<button data-dbadd="${k}" style="margin-top:6px">+ إضافة</button></details>`).join("") +
+    `<h2 class="mt">أنواع المنتجات الأخرى (أضف أي نوع)</h2><p class="note" style="margin-top:0">المساحة تُحسب من طريقة النوع. الخامات = المساحة × سعرها، العمل = المساحة × ساعات/م² × الأجرة، الحافة = المساحة × متر/م² × سعر المتر، الماكينة = المساحة × ساعات/م² × (سعر الساعة + الكهرباء). بنود النوع: ثابت/قطعة = القيمة، م² = القيمة × مساحة القطعة، متر = القيمة × عرض القطعة، % = من تكلفة القطعة.</p>` +
+    D.ty.map((y, i) => `<div class="card" style="padding:12px;background:var(--bg)"><div class="thr"><input type="text" data-b="D.ty.${i}.n" value="${esc(y.n)}"><select data-b="D.ty.${i}.f">${FM.map(f => `<option value="${f[0]}"${f[0] == y.f ? " selected" : ""}>${f[1]}</option>`).join("")}</select><button class="x" data-dbrm="ty:${i}" aria-label="حذف">✕</button></div><input type="text" dir="ltr" data-b="D.ty.${i}.en" value="${esc(y.en || "")}" placeholder="English name" aria-label="English name" style="margin-bottom:8px"><div class="row">${[["w", "عرض/طول"], ["h", "ارتفاع"], ["d", "عمق"], ["s", "أرفف"], ["hw", "إكسسوارات"], ["lab", "ساعات عمل/م²"], ["edge", "حافة م/م²"], ["cnc", "ماكينة س/م²"]].map(a => fl(a[1], `D.ty.${i}.${a[0]}`, y[a[0]])).join("")}</div>${cpRows(`D.ty.${i}.cp`, y.cp, `ty:${i}`, CT)}<button data-cpa="ty:${i}">+ إضافة بند للنوع (يُحتسب تلقائيًا)</button></div>`).join("") +
+    `<button data-dbadd="ty">+ إضافة نوع منتج</button>` +
+    `<h2 class="mt">بنود إضافية لكل نوع وحدة في المطبخ (تُحتسب تلقائيًا لكل وحدة من النوع)</h2><p class="note" style="margin-top:0">مبلغ لكل وحدة = القيمة لكل وحدة من النوع، لكل م² = القيمة × (مساحة هيكل الوحدة + واجهتها)، لكل متر = القيمة × عرض الوحدة بالمتر.</p>` +
+    Object.keys(UD).map(k => `<div class="card" style="padding:12px;background:var(--bg)"><b style="display:block;margin-bottom:6px">${UD[k][0]}</b>${cpRows(`D.uc.${k}`, D.uc[k], `uc:${k}`, CU)}<button data-cpa="uc:${k}">+ إضافة بند</button></div>`).join("");
+
+  $("rt").innerHTML = Object.keys(RL).map(k => `<div><label>${RL[k]}</label><input type="number" data-b="R.${k}" value="${R[k]}" min="0" step="any" inputmode="decimal"><div class="note">${RH[k] || ""}</div></div>`).join("");
+  $("cx").innerHTML = R.cx.map((c, i) => `<div class="card" style="padding:12px;background:var(--bg)"><div class="thr"><input type="text" data-b="R.cx.${i}.n" value="${esc(c.n)}" aria-label="اسم المتغير"><input type="number" data-b="R.cx.${i}.v" value="${c.v}" step="any" aria-label="القيمة"><button class="x" data-cxd="${i}" aria-label="حذف">✕</button></div><div class="row"><div><label>طريقة الاحتساب</label><select data-b="R.cx.${i}.t">${Object.keys(CT).map(k => `<option value="${k}"${k == c.t ? " selected" : ""}>${CT[k]}</option>`).join("")}</select></div><div><label>ينطبق على</label><select data-b="R.cx.${i}.s">${Object.keys(CS).map(k => `<option value="${k}"${k == c.s ? " selected" : ""}>${CS[k]}</option>`).join("")}</select></div></div><div class="note">${cxh(c)}</div></div>`).join("");
+  curUI();
+  fillC();
+}
+
+function renderActiveTab() {
+  if (VW !== "proj") return;
+  if (TAB === "K" && DIRTY.K) { rk(); DIRTY.K = false; }
+  else if (TAB === "G" && DIRTY.G) { renderItems(); DIRTY.G = false; }
+  else if (TAB === "D" && DIRTY.D) { renderDB(); DIRTY.D = false; }
+  else if (TAB === "A" && DIRTY.A) { ar0(); DIRTY.A = false; }
+  else if (TAB === "Q" && DIRTY.Q) { qs(); DIRTY.Q = false; }
+  calc();
+}
+
+function render() {
+  K = KI != null && G[KI] && G[KI].k ? G[KI] : null;
+  if (TAB == "K" && !K) {
+    TAB = "G";
+    ["K", "G", "P", "A", "D", "Q"].forEach(k => $("t" + k).classList.toggle("on", k == "G"));
+    document.querySelectorAll("#tabs button").forEach(b => b.classList.toggle("on", b.dataset.tab == "G"));
+  }
+  bar();
+  renderActiveTab();
+  view(VW);
+}
+
+/* ==========================================================================
+   5. الرسم الهندسي وعرض السعر والمشتريات (Drawings, Quote & Purchasing)
+   ========================================================================== */
+function kdraw(en, K) {
+  const U = K.units;
+  if (!U.length) return "";
+  const tl = U.filter(u => u.t == "tall"), bs = U.filter(u => u.t != "tall" && u.t != "wall"), wl = U.filter(u => u.t == "wall");
+  const sm = a => a.reduce((s, u) => s + (+u.w || 0), 0);
+  const mx = a => a.reduce((m, u) => Math.max(m, +u.h || 0), 0);
+  const tw = sm(tl), bw = sm(bs), ww = sm(wl), W = (tw + Math.max(bw, ww)) || 1;
+  const pl = +K.pl || 0, ct = bs.length ? 4 : 0, wb = 140;
+  const H = Math.max(mx(tl), wl.length ? wb + mx(wl) : 0, pl + mx(bs) + ct, 100) + 8;
+  const s = Math.min(720 / W, 380 / H), X = 24, Y = 10, by = Y + H * s;
+  const F = { base: "#dcebe7", drawer: "#cfe3dd", corner: "#e6dcc8", app: "#e3e3e3", wall: "#dde7f3", tall: "#f3e6c8" };
+  const ln = (x1, y1, x2, y2, c) => `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${c || "#444"}" stroke-width="1"/>`;
+  const lab = (x, w) => `<text x="${(x + w * s / 2).toFixed(1)}" y="${(by + 12).toFixed(1)}" font-size="10" text-anchor="middle" fill="#222">${w}</text>`;
+
+  const box = (x, yt, w, hh, u) => {
+    const pw = w * s, ph = hh * s, dw = +u.dw || 0, dr = +u.dr || 0;
+    let r = `<rect x="${x.toFixed(1)}" y="${yt.toFixed(1)}" width="${pw.toFixed(1)}" height="${ph.toFixed(1)}" fill="${F[u.t] || "#eee"}" stroke="#444" stroke-width="1"${u.t == "app" ? ' stroke-dasharray="4 3"' : ""}/>`;
+    for (let i = 1; i < dw; i++) r += ln(x + 3, yt + ph * i / dw, x + pw - 3, yt + ph * i / dw, "#777");
+    for (let i = 0; i < dw; i++) {
+      const cy = yt + ph * (i + .5) / dw;
+      r += ln(x + pw / 2 - 6, cy, x + pw / 2 + 6, cy, "#333");
+    }
+    if (dr == 2) r += ln(x + pw / 2, yt + 2, x + pw / 2, yt + ph - 2, "#777");
+    if (dr >= 1 && !dw) {
+      const hy = yt + (u.t == "wall" ? ph - 12 : 4);
+      if (dr == 2) r += ln(x + pw / 2 - 5, hy, x + pw / 2 - 5, hy + 8, "#333") + ln(x + pw / 2 + 5, hy, x + pw / 2 + 5, hy + 8, "#333");
+      else r += ln(x + pw - 6, hy, x + pw - 6, hy + 8, "#333");
+    }
+    return r;
+  };
+
+  let o = "", x = X;
+  tl.forEach(u => { o += box(x, by - (+u.h) * s, +u.w, +u.h, u) + lab(x, u.w); x += u.w * s; });
+  const bx = x;
+  bs.forEach(u => { o += box(x, by - (pl + +u.h) * s, +u.w, +u.h, u) + lab(x, u.w); x += u.w * s; });
+  if (pl && bs.length) o += `<rect x="${bx.toFixed(1)}" y="${(by - pl * s).toFixed(1)}" width="${(bw * s).toFixed(1)}" height="${(pl * s).toFixed(1)}" fill="#bdbdbd"/>`;
+  if (ct) o += `<rect x="${bx.toFixed(1)}" y="${(by - (pl + mx(bs) + ct) * s).toFixed(1)}" width="${(bw * s).toFixed(1)}" height="${(ct * s).toFixed(1)}" fill="#8a8f94"/>`;
+  x = bx;
+  wl.forEach(u => { o += box(x, by - (wb + +u.h) * s, +u.w, +u.h, u); x += u.w * s; });
+  o += ln(X - 6, by, X + W * s + 6, by, "#222") + ln(X, by + 22, X + W * s, by + 22, "#888") + `<text x="${(X + W * s / 2).toFixed(1)}" y="${(by + 34).toFixed(1)}" font-size="11" text-anchor="middle" fill="#222">${en ? "Total length" : "الطول الكلي"}: ${W} ${en ? "cm" : "سم"}</text>`;
+  const svgW = Math.round(W * s + X * 2), svgH = Math.round(by + 42);
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${svgW} ${svgH}" width="100%" style="max-width:${svgW}px;height:auto;display:block;margin:auto" role="img" aria-label="${en ? "Kitchen layout drawing" : "مخطط توزيع المطبخ"}" font-family="Tahoma,Arial,sans-serif">${o}</svg>`;
+}
+
+const lineList = en => {
+  const t = (a, e) => en ? e : a;
+  const ne = (a, i) => { const o = a[i] || a[0] || { n: "" }; return en ? (o.en || o.n) : o.n; };
+  return G.map((x, i) => {
+    const c = T.ic[i];
+    if (x.k) {
+      const kn = x.name && x.name !== "المطبخ" ? x.name : "";
+      return [t("مطبخ" + (kn ? ' "' + kn + '"' : "") + ": سفلي " + x.low + " سم، علوي " + x.up + " سم (" + x.units.length + " وحدة)، واجهات " + ne(D.front, x.front) + "، سطح " + ne(D.stone, x.st.m), "Kitchen" + (kn ? ' "' + kn + '"' : "") + ": base run " + x.low + " cm, wall run " + x.up + " cm (" + x.units.length + " units), fronts: " + ne(D.front, x.front) + ", countertop: " + ne(D.stone, x.st.m)), 1, c.sell];
+    }
+    const y = D.ty[x.t] || D.ty[0];
+    const nm = en ? (x.name && /[A-Za-z]/.test(x.name) ? x.name : ne(D.ty, x.t)) : (x.name || y.n);
+    return [nm + " (" + x.w + "×" + x.h + "×" + x.d + " " + t("سم", "cm") + ")", c.q, c.sell];
+  });
+};
+
+const kcx = o => {
+  let tot = 0;
+  G.forEach(x => {
+    if (!x.k) return;
+    const s = [x.body, x.front, x.fin, x.st.m, x.o.slide];
+    x.body = o.body; x.front = o.front; x.fin = o.fin; x.st.m = o.stone; x.o.slide = o.slide;
+    try { tot += kc(x).pr; } finally { x.body = s[0]; x.front = s[1]; x.fin = s[2]; x.st.m = s[3]; x.o.slide = s[4]; }
+  });
+  return tot;
+};
+
+function qs() {
+  const pk = P.pk, ps = P.pay.reduce((s, y) => s + (+y.p || 0), 0);
+  const op = (v, l) => `<option value="${v}"${P.dt == v ? " selected" : ""}>${l}</option>`;
+  $("qset").innerHTML = `<h2>إعداد العرض</h2><div class="row w"><div><label>رقم العرض (فارغ = تلقائي)</label><input type="text" data-b="P.qn" value="${esc(P.qn)}"></div>${fl("صلاحية العرض (أيام)", "P.qv", P.qv)}${fl("الخصم", "P.dv", P.dv)}<div><label>نوع الخصم</label><select data-b="P.dt">${op("pct", "نسبة %")}${op("fix", "مبلغ")}</select></div><div><label>سبب الخصم</label><input type="text" data-b="P.dr" value="${esc(P.dr)}"></div><div><label>لغة العرض</label><select data-b="P.ql"><option value="ar"${P.ql != "en" ? " selected" : ""}>العربية</option><option value="en"${P.ql == "en" ? " selected" : ""}>English</option></select></div><div style="display:flex;align-items:center"><label style="margin:0;cursor:pointer"><input type="checkbox" data-b="P.dg"${P.dg ? " checked" : ""}> إرفاق مخطط المطبخ</label></div></div>
+  <details data-dk="pk"${DO.pk ? " open" : ""}><summary>الباقات: ثلاثة مستويات في عرض واحد</summary><label style="margin:8px 0;cursor:pointer"><input type="checkbox" data-b="P.pk.on"${pk.on ? " checked" : ""}> عرض سعر المطبخ على شكل باقات</label>${pk.l.map((q, i) => {
+    const g = `P.pk.l.${i}.`;
+    return `<div class="card" style="padding:12px;margin-top:8px;background:var(--bg)"><div class="row w"><div><label>اسم الباقة</label><input type="text" data-b="${g}n" value="${esc(q.n)}"></div>${fc("ألواح الهيكل", sel(D.body, q.body, g + "body"))}${fc("الواجهات", sel(D.front, q.front, g + "front"))}${fc("التشطيب", sel(D.fin, q.fin, g + "fin"))}${fc("الرخام", sel(D.stone, q.stone, g + "stone"))}${fc("السكة", sel(D.hw, q.slide, g + "slide", o => o.r == "slide"))}</div></div>`;
+  }).join("")}</details>
+  <details data-dk="pay"${DO.pay ? " open" : ""}><summary>الدفعات (المجموع ${ps}%)</summary>${P.pay.map((y, j) => `<div class="thr h"><input type="text" data-b="P.pay.${j}.n" value="${esc(y.n)}" placeholder="الاسم"><input type="text" dir="ltr" data-b="P.pay.${j}.en" value="${esc(y.en || "")}" placeholder="English"><input type="number" data-b="P.pay.${j}.p" value="${y.p}" min="0" max="100" aria-label="النسبة %"><button class="x" data-pyd="${j}" aria-label="حذف">✕</button></div>`).join("")}<button data-pya="1">+ دفعة</button>${ps != 100 ? '<p class="note" style="color:var(--bad)">مجموع النسب يجب أن يكون 100%.</p>' : ""}</details>`;
+}
+
+function qr(L, sub, vat, dsc) {
+  const en = P.ql == "en", t = (a, e) => en ? e : a;
+  const d = new Date(), ex = new Date(d.getTime() + (+P.qv || 15) * 864e5);
+  const f = x => x.toLocaleDateString("en-GB");
+  const no = P.qn || "Q-" + d.toISOString().slice(2, 10).replace(/-/g, "") + "-" + (S.cur + 1);
+  const pn = S.pr[S.cur].n, tot = sub + vat;
+  const si = T.ic.filter(c => !c.kit).reduce((s, c) => s + c.sell, 0);
+  const ne = (a, i) => { const o = a[i] || a[0] || { n: "" }; return en ? (o.en || o.n) : o.n; };
+  const cu = en ? ((CURS.find(c => !C.cm && c[0] == CUR) || [])[3] || CUR) : CUR;
+  const pkm = !!(T.kits.length && P.pk.on), dr = P.dr ? " (" + esc(P.dr) + ")" : "";
+  const ig = o => o && o.im ? `<div><img src="${o.im}" alt="" style="height:56px;border-radius:4px;margin-top:4px"></div>` : "";
+  const hasO = G.some(x => !x.k);
+  const LN = lineList(en);
+
+  let bd;
+  if (pkm) {
+    const rs = P.pk.l.map(q => {
+      const kp = kcx(q), s0 = kp + si;
+      const ds = P.dt == "fix" ? Math.min(+P.dv || 0, s0) : s0 * Math.min(+P.dv || 0, 100) / 100;
+      const sb = s0 - ds, vt = sb * R.vat / 100;
+      return { q, kp, ds, sb, vt, t: sb + vt };
+    });
+    const tr = (n, g) => `<tr><td>${n}</td>${rs.map(r => `<td>${g(r)}</td>`).join("")}</tr>`;
+    bd = `<table><tr><th></th>${rs.map(r => `<th>${esc(r.q.n)}</th>`).join("")}</tr>` +
+      tr(t("ألواح الهيكل", "Body boards"), r => ne(D.body, r.q.body)) +
+      tr(t("الواجهات", "Fronts"), r => ne(D.front, r.q.front) + (D.fin[r.q.fin] && D.fin[r.q.fin].p > 0 ? " + " + ne(D.fin, r.q.fin) : "") + ig(D.front[r.q.front])) +
+      tr(t("سطح العمل", "Countertop"), r => ne(D.stone, r.q.stone) + ig(D.stone[r.q.stone])) +
+      tr(t("السكك", "Drawer slides"), r => ne(D.hw, r.q.slide)) +
+      tr(t("سعر المطبخ", "Kitchen price"), r => fm(r.kp)) +
+      (hasO ? tr(t("منتجات أخرى", "Other products"), () => fm(si)) : "") +
+      (+P.dv > 0 ? tr(t("خصم", "Discount") + dr, r => "-" + fm(r.ds)) : "") +
+      tr(t("قبل الضريبة", "Before VAT"), r => fm(r.sb)) +
+      tr(t("ضريبة", "VAT") + " " + R.vat + "%", r => fm(r.vt)) +
+      `<tr style="background:#e6f3f0"><th>${t("الإجمالي", "Total")} (${cu})</th>${rs.map(r => `<th>${fm(r.t)}</th>`).join("")}</tr></table>` +
+      (hasO ? `<p>${t("المنتجات الأخرى", "Other products")}: ${LN.filter((l, i) => !G[i].k).map(l => esc(l[0])).join(en ? ", " : "، ")}</p>` : "");
+  } else {
+    bd = `<table><tr><th>${t("البند", "Item")}</th><th>${t("الكمية", "Qty")}</th><th>${t("السعر", "Price")} (${cu})</th></tr>${LN.map(l => `<tr><td>${esc(l[0])}</td><td>${l[1]}</td><td>${fm(l[2])}</td></tr>`).join("")}${dsc > 0 ? `<tr><td colspan="2">${t("خصم", "Discount")}${dr}</td><td>-${fm(dsc)}</td></tr>` : ""}<tr><td colspan="2">${t("المجموع قبل الضريبة", "Subtotal before VAT")}</td><td>${fm(sub)}</td></tr><tr><td colspan="2">${t("ضريبة القيمة المضافة", "VAT")} ${R.vat}%</td><td>${fm(vat)}</td></tr><tr style="background:#e6f3f0"><th colspan="2">${t("الإجمالي", "Total")}</th><th>${fm(tot)}</th></tr></table>`;
+    const K0 = G.find(x => x.k);
+    const mt = K0 ? [[t("الواجهات", "Fronts"), D.front[K0.front] || D.front[0]], [t("سطح العمل", "Countertop"), D.stone[K0.st.m] || D.stone[0]], [t("التشطيب", "Finish"), D.fin[K0.fin] && D.fin[K0.fin].p > 0 ? D.fin[K0.fin] : null]].filter(m => m[1] && m[1].im) : [];
+    if (mt.length) bd += `<h3>${t("الخامات المختارة", "Selected materials")}</h3><div style="display:flex;gap:16px;flex-wrap:wrap">${mt.map(m => `<div style="text-align:center"><img src="${m[1].im}" alt="" style="height:80px;border-radius:6px"><div style="font-size:13px">${m[0]}: ${esc(en ? (m[1].en || m[1].n) : m[1].n)}</div></div>`).join("")}</div>`;
+  }
+
+  const KS = G.filter(x => x.k && x.units.length);
+  const dg = P.dg && KS.length ? KS.map(x => `<h3>${t("مخطط توزيع المطبخ", "Kitchen layout")}${KS.length > 1 ? " — " + esc(x.name) : ""}</h3>${kdraw(en, x)}`).join("") + `<p class="note" style="color:#555">${t("الرسم توضيحي بمقياس تقريبي، والمقاسات النهائية تُعتمد بعد المعاينة في الموقع.", "Illustrative drawing at approximate scale. Final dimensions are confirmed after a site visit.")}</p>` : "";
+  const PE = { "عند التعاقد": "On contract signing", "عند التوريد قبل التركيب": "On delivery, before installation", "عند التسليم": "On handover" };
+  const py = P.pay.length ? `<h3>${t("جدول الدفعات", "Payment schedule")}</h3><table><tr><th>${t("الدفعة", "Installment")}</th><th>${t("النسبة", "Percent")}</th>${pkm ? "" : `<th>${t("المبلغ", "Amount")}</th>`}</tr>${P.pay.map(y => `<tr><td>${esc(en ? (y.en || PE[y.n] || y.n) : y.n)}</td><td>${y.p}%</td>${pkm ? "" : `<td>${fm(tot * y.p / 100)}</td>`}</tr>`).join("")}</table>` : "";
+
+  $("quote").innerHTML = `<div dir="${en ? "ltr" : "rtl"}"><div class="qh"><div><b style="font-size:21px;color:#146c5e">${esc((en ? (C.ne || C.n) : C.n) || t("عرض سعر", "Quotation"))}</b><div style="color:#4a5568;margin-top:2px">${esc(C.ph || "")}</div></div>${C.lg ? `<img src="${C.lg}" alt="">` : ""}</div><h2 style="margin-top:16px;font-size:18px">${t("عرض سعر", "Quotation")}${pn ? " — " + esc(pn) : ""}</h2><div style="color:#4a5568;font-size:13px">${t("رقم العرض", "Quotation No.")}: <b>${esc(no)}</b> · ${t("التاريخ", "Date")}: ${f(d)} · ${t("صالح حتى", "Valid until")}: ${f(ex)}</div>${bd}${dg}${py}<p style="margin-top:16px;padding-top:12px;border-top:1px solid #e2e8f0;font-size:13px;color:#4a5568">${esc((en ? (C.tme || C.tm) : C.tm) || "")}</p></div>`;
+}
+
+const qf = r => r.u == "لوح" ? (+r.q.toFixed(1)) + " (≈" + Math.ceil(r.q - 1e-9) + ")" : (r.u == "قطعة" || r.u == "فتحة") ? Math.ceil(r.q - 1e-9) : +r.q.toFixed(1);
+
+function br(ic) {
+  const bn = o => o.n + (o.l > 0 && o.w > 0 ? " (" + o.l + "×" + o.w + " سم)" : "");
+  const M = new Map(), pk = (a, i) => a[i] || a[0] || { n: "", p: 0 };
+  const add = (c, n, q, u, p) => {
+    if (!(q > 0)) return;
+    const key = c + "|" + n + "|" + u, o = M.get(key) || { c, n, q: 0, u, t: 0 };
+    o.q += q; o.t += q * p; M.set(key, o);
+  };
+
+  G.forEach((x, i) => {
+    const c = ic[i];
+    if (x.k) {
+      const a = c.a, B = pk(D.body, x.body), K = pk(D.back, x.back), F = pk(D.front, x.front), FN = pk(D.fin, x.fin), H = r => pk(D.hw, x.o[r]), ST = pk(D.stone, x.st.m);
+      add("ألواح", bn(B), c.sb, "لوح", B.p);
+      add("ألواح", bn(K), c.sk, "لوح", K.p);
+      add("واجهات", F.n, a.fr * (1 + R.wF / 100), "م²", F.p);
+      if (FN.p > 0) add("تشطيبات", FN.n, a.fr, "م²", FN.p);
+      add("حواف", "شريط حواف", a.body * R.eB + a.fr * R.eF, "م", R.edgeP);
+      [["hinge", a.hn], ["slide", a.sl], ["handle", a.hd], ["leg", a.lg], ["bracket", a.br]].forEach(y => add("إكسسوارات", H(y[0]).n, y[1], "قطعة", H(y[0]).p));
+      x.ex.forEach(l => { const o = D.hw[l.i]; if (o) add("إكسسوارات", o.n, +l.q, "قطعة", o.p); });
+      x.li.forEach(l => { const o = D.light[l.i]; if (o) add("إضاءة", o.n, +l.q, "وحدة/م", o.p); });
+      add("رخام", ST.n, (x.st.len || x.low) * (x.st.depth + x.st.bs) / 1e4, "م²", ST.p);
+      add("رخام", "فتحات قص (حوض/فرن)", x.st.cuts, "فتحة", R.cutP);
+    } else {
+      const y = D.ty[x.t] || D.ty[0], q = c.q, B = pk(D.body, x.b), F = pk(D.fin, x.f);
+      add("ألواح", bn(B), c.sh * q, "لوح", B.p);
+      if (F.p > 0) add("تشطيبات", F.n, c.a * q, "م²", F.p);
+      add("حواف", "شريط حواف", c.a * y.edge * q, "م", R.edgeP);
+      (x.ac || []).forEach(l => { const o = D.hw[l.i]; if (o) add("إكسسوارات", o.n, l.q * q, "قطعة", o.p); });
+    }
+  });
+
+  const od = ["ألواح", "واجهات", "تشطيبات", "حواف", "إكسسوارات", "إضاءة", "رخام"];
+  const rows = [...M.values()].sort((a, b) => od.indexOf(a.c) - od.indexOf(b.c));
+  const pn = S.pr[S.cur].n;
+  T.B = rows;
+  $("buy").innerHTML = `<div class="qh"><h2 style="margin:0;color:#146c5e">قائمة مشتريات${pn ? " — " + esc(pn) : ""}</h2><div style="color:#4a5568">${new Date().toLocaleDateString("en-GB")}</div></div>${rows.length ? `<table><tr><th>الفئة</th><th>البند</th><th>الكمية</th><th>الوحدة</th><th>التكلفة التقديرية (${CUR})</th></tr>${rows.map(r => `<tr><td>${r.c}</td><td>${esc(r.n)}</td><td>${qf(r)}</td><td>${r.u}</td><td>${fm(r.t)}</td></tr>`).join("")}<tr style="background:#e6f3f0"><th colspan="4">إجمالي الخامات والإكسسوارات التقديري</th><th>${fm(rows.reduce((s, r) => s + r.t, 0))}</th></tr></table><p class="note" style="color:#555">الكميات تقديرية وتشمل الهالك. تأكد منها مع التقطيع الفعلي قبل الطلب.</p>` : "<p>لا توجد بنود في هذا المشروع.</p>"}`;
+}
+
+function buyCopy(csv) {
+  const B = T.B || [];
+  const t = csv
+    ? "الفئة,البند,الكمية,الوحدة,التكلفة\n" + B.map(r => [r.c, r.n, +r.q.toFixed(2), r.u, Math.round(r.t)].map(x => '"' + String(x).replace(/"/g, '""') + '"').join(",")).join("\n")
+    : "قائمة مشتريات" + (S.pr[S.cur].n ? " — " + S.pr[S.cur].n : "") + "\n" + B.map(r => "- " + r.n + ": " + qf(r) + " " + r.u).join("\n");
+  try {
+    navigator.clipboard.writeText(t).then(() => $("bmsg").textContent = "تم النسخ بنجاح.", () => $("bmsg").textContent = "تعذّر النسخ.");
+  } catch (e) { $("bmsg").textContent = "تعذّر النسخ."; }
+}
+
+/* ==========================================================================
+   6. المقارنة الفعلية والتنبيهات (Actuals & Validation Warnings)
+   ========================================================================== */
+const GN = [
+  ["mat", "الألواح والواجهات والحواف"], ["hw", "الإكسسوارات والإضاءة"],
+  ["stone", "الرخام"], ["labor", "العمالة والماكينات والكهرباء"],
+  ["site", "النقل والتركيب"], ["other", "تكاليف أخرى"]
+];
+const GA = {
+  mat: " راجع أسعار الألواح وهالكها.", hw: " راجع أسعار الإكسسوارات وكمياتها.",
+  stone: " راجع سعر الرخام وأبعاده.", labor: " راجع ساعات العمل لكل م² وأجرة الساعة.",
+  site: " راجع تكلفة النقل والتركيب.", other: " راجع البنود الإضافية."
+};
+
+function est(p) {
+  const ic = p.G.map(x => x.k ? kc(x) : ci(x));
+  const g = { mat: 0, hw: 0, stone: 0, labor: 0, site: 0, other: 0 };
+  let hl = 0, hm = 0, sheets = 0, shA = 0, net = 0;
+  ic.forEach(c => {
+    for (const n in c.g) g[n] += c.g[n];
+    hl += c.hl; hm += c.hm;
+    if (c.kit) {
+      sheets += c.sb + c.sk; shA += c.sb * c.sbA + c.sk * c.skA; net += c.a.body + c.a.back;
+    } else {
+      sheets += c.sh * c.q; shA += c.sh * c.q * c.sA; net += c.a * c.q;
+    }
+  });
+  return { g, hl, hm, sheets, shA, net, dc: Object.values(g).reduce((s, v) => s + v, 0) };
+}
+
+function ar0() {
+  const row = (k, n) => `<tr><td>${n}</td><td id="ae_${k}"></td><td><input type="number" data-b="P.fa.${k}" value="${P.fa[k] || ""}" min="0" step="any" aria-label="${n}"></td><td id="ad_${k}"></td></tr>`;
+  $("act").innerHTML = `<table class="at"><tr><th>المجموعة</th><th>التقدير</th><th>الفعلي</th><th>الفرق</th></tr>${GN.map(g => row(g[0], g[1])).join("")}<tr><td colspan="4" style="background:var(--bg)"><b>الساعات وعدد الألواح</b></td></tr>${row("hl", "ساعات العمل")}${row("hm", "ساعات الماكينة")}${row("sh", "عدد الألواح الكلي")}</table>`;
+}
+
+const dfx = (A, E, d) => {
+  if (!(E > 0)) return "—";
+  const df = A - E, p = df / E * 100;
+  return `<span class="${df > 0 ? "up" : "dn"}">${df > 0 ? "+" : ""}${d ? df.toFixed(1) : fm(df)} (${df > 0 ? "+" : ""}${Math.round(p)}%)</span>`;
+};
+
+function ar() {
+  const k = KI != null && T.ic[KI] && T.ic[KI].kit ? T.ic[KI] : null;
+  if ($("nsh")) $("nsh").textContent = "اترك الخانتين 0 ليحسب النظام تلقائيًا." + (k ? " تقدير النظام: هيكل " + k.sbE.toFixed(1) + " · ظهر " + k.skE.toFixed(1) + " لوح." : "") + " الرقم من برنامج التقطيع يشمل الهالك.";
+  if (TAB !== "A") return;
+
+  const e = est(S.pr[S.cur]), f = P.fa;
+  let tA = 0, tE = 0, all = true;
+  GN.forEach(g => {
+    const E = e.g[g[0]], A = +f[g[0]] || 0;
+    $("ae_" + g[0]).textContent = fm(E);
+    $("ad_" + g[0]).innerHTML = A > 0 ? dfx(A, E) : "—";
+    if (A > 0) { tA += A; tE += E; } else if (E > 0) all = false;
+  });
+  [["hl", e.hl], ["hm", e.hm], ["sh", e.sheets]].forEach(x => {
+    const A = +f[x[0]] || 0;
+    $("ae_" + x[0]).textContent = x[1].toFixed(1);
+    $("ad_" + x[0]).innerHTML = A > 0 ? dfx(A, x[1], 1) : "—";
+  });
+
+  let h = "";
+  if (tA > 0) {
+    h += `<div class="ln"><span>إجمالي ما أدخلته (التقدير لنفس المجموعات ${fm(tE)})</span><b>${fm(tA)} ${CUR}</b></div>`;
+    if (all) {
+      const pe = T.sub - e.dc, pa = T.sub - tA;
+      h += `<div class="ln"><span>الربح قبل المصاريف غير المباشرة: المقدّر / الفعلي</span><b>${fm(pe)} / ${fm(pa)} ${CUR}</b></div>`;
+      if (pa < 0) h += '<div class="wi e"><b>خطأ</b> التكلفة الفعلية أعلى من سعر البيع.</div>';
+    } else h += '<p class="note">أدخل كل المجموعات لتظهر مقارنة الربح.</p>';
+  }
+
+  const ag = { cnt: 0, net: 0, shA: 0 }, ks = ["mat", "hw", "stone", "labor", "site", "other", "hl", "hm", "sh"];
+  ks.forEach(x => ag[x] = [0, 0]);
+  S.pr.forEach(p => {
+    const q = p.P.fa;
+    if (!q || !ks.some(x => +q[x] > 0)) return;
+    const ep = est(p); ag.cnt++;
+    ["mat", "hw", "stone", "labor", "site", "other"].forEach(x => { if (+q[x] > 0) { ag[x][0] += +q[x]; ag[x][1] += ep.g[x]; } });
+    if (+q.hl > 0) { ag.hl[0] += +q.hl; ag.hl[1] += ep.hl; }
+    if (+q.hm > 0) { ag.hm[0] += +q.hm; ag.hm[1] += ep.hm; }
+    if (+q.sh > 0) { ag.sh[0] += +q.sh; ag.sh[1] += ep.sheets; ag.shA += ep.shA; ag.net += ep.net; }
+  });
+
+  const gf = x => ag[x][1] > 0 ? ag[x][0] / ag[x][1] : null, SG = [];
+  GN.forEach(g => {
+    const r = gf(g[0]);
+    if (r && Math.abs(r - 1) > .1) SG.push(`<div class="wi w"><b>${g[1]}</b> الفعلي ${r > 1 ? "أعلى" : "أقل"} من التقدير بنحو ${Math.abs(Math.round((r - 1) * 100))}%.${GA[g[0]]}</div>`);
+  });
+  if (ag.sh[1] > 0 && ag.net > 0) {
+    const wI = Math.round((ag.sh[0] * (ag.shA / ag.sh[1]) / ag.net - 1) * 100);
+    if (wI >= 0 && wI <= 60 && Math.abs(wI - R.wB) >= 3) SG.push(`<div class="wi w">هالك الألواح الفعلي ≈ <b>${wI}%</b> والمعتمد ${R.wB}%. <button data-adj="waste:${wI}">ضبط الهالك إلى ${wI}%</button></div>`);
+  }
+  const fh = gf("hl"), fq = gf("hm");
+  if (fh && Math.abs(fh - 1) > .1 && fh > .3 && fh < 3) {
+    const F = Math.round(fh * 100) / 100;
+    SG.push(`<div class="wi w">ساعات العمل الفعلية ${fh > 1 ? "أكثر" : "أقل"} من التقدير بنحو ${Math.abs(Math.round((fh - 1) * 100))}%. <button data-adj="labor:${F}">ضرب معدلات ساعات العمل ×${F}</button></div>`);
+  }
+  if (fq && Math.abs(fq - 1) > .1 && fq > .3 && fq < 3) {
+    const F = Math.round(fq * 100) / 100;
+    SG.push(`<div class="wi w">ساعات الماكينة الفعلية ${fq > 1 ? "أكثر" : "أقل"} من التقدير بنحو ${Math.abs(Math.round((fq - 1) * 100))}%. <button data-adj="mach:${F}">ضرب معدلات ساعات الماكينة ×${F}</button></div>`);
+  }
+  h += ag.cnt ? `<h2 class="mt">التوصيات (من ${ag.cnt} مشروع منفَّذ)</h2>` + (ag.cnt < 3 ? '<p class="note">العدد قليل. الأفضل 5 مشاريع أو أكثر قبل اعتماد التعديلات.</p>' : "") + (SG.join("") || '<div class="wi">تقديراتك قريبة من الفعلي (فرق أقل من 10%).</div>') : '<p class="note">أدخل بعض الأرقام الفعلية ليبدأ النظام بالمقارنة والتوصية.</p>';
+  $("actR").innerHTML = h;
+}
+
+function wr(ic, sub, cost, dsc, dsc0) {
+  const W = [], er = m => W.push({ l: "e", m }), wa = m => W.push({ l: "w", m });
+  const pk = (a, i) => a[i] || a[0] || { n: "", p: 0 }, nk = G.filter(x => x.k).length;
+  const RG = {
+    base: [[20, 120], [60, 95], [40, 70]], drawer: [[20, 120], [60, 95], [40, 70]],
+    corner: [[20, 150], [60, 95], [40, 70]], app: [[20, 120], [60, 95], [40, 70]],
+    wall: [[15, 120], [30, 100], [20, 45]], tall: [[20, 120], [150, 260], [40, 70]]
+  };
+
+  G.forEach((x, i) => {
+    const c = ic[i];
+    if (x.k) {
+      const pf = nk > 1 ? "«" + (x.name || "مطبخ") + "» — " : "";
+      const z = (a, ix, n) => { const o = pk(a, ix); if (!(o.p > 0)) er(pf + 'سعر "' + o.n + '" (' + n + ') يساوي صفرًا.'); };
+      if (!x.units.length) er(pf + "المطبخ بلا وحدات. افتحه واضغط تقسيم تلقائي أو أضف وحدات.");
+      z(D.body, x.body, "ألواح الهيكل"); z(D.back, x.back, "الظهر"); z(D.front, x.front, "الواجهات"); z(D.stone, x.st.m, "الرخام");
+      ["hinge", "slide", "handle", "leg", "bracket"].forEach(r => { const o = pk(D.hw, x.o[r]); if (!(o.p > 0)) wa(pf + 'سعر "' + o.n + '" يساوي صفرًا.'); });
+      x.units.forEach((u, ui) => {
+        const nm = u.n || "وحدة " + (ui + 1);
+        if (!(u.w > 0 && u.h > 0 && u.d > 0)) { er(pf + 'أبعاد "' + nm + '" فيها قيمة صفر.'); return; }
+        const rg = RG[u.t];
+        if (rg) [["العرض", u.w, rg[0]], ["الارتفاع", u.h, rg[1]], ["العمق", u.d, rg[2]]].forEach(cc => {
+          if (cc[1] < cc[2][0] || cc[1] > cc[2][1]) wa(pf + cc[0] + ' "' + nm + '" = ' + cc[1] + " سم، وهو خارج المعتاد (" + cc[2][0] + "-" + cc[2][1] + ").");
+        });
+      });
+      const lm = x.low ? c.pr / (x.low / 100) : 0;
+      if (R.lmMin > 0 && R.lmMax > 0 && lm > 0 && (lm < R.lmMin || lm > R.lmMax)) wa(pf + "السعر للمتر الطولي " + fm(lm) + " خارج النطاق المعتاد (" + fm(R.lmMin) + " - " + fm(R.lmMax) + ").");
+    } else {
+      const nm = x.name || (D.ty[x.t] || D.ty[0]).n;
+      if (!(x.w > 0 && x.h > 0)) er('أبعاد البند "' + nm + '" فيها قيمة صفر.');
+      else if (!(+x.q > 0)) er('كمية البند "' + nm + '" صفر.');
+      else {
+        if (!(pk(D.body, x.b).p > 0)) er('سعر لوح البند "' + nm + '" يساوي صفرًا.');
+        if (!(c.sell > 0)) wa('سعر البند "' + nm + '" صفر.');
+      }
+    }
+  });
+
+  if (nk && P.pk.on) {
+    const pp = P.pk.l.map(q => kcx(q));
+    if (pp[0] > pp[1] || pp[1] > pp[2]) wa("أسعار الباقات ليست تصاعدية، راجع اختيار الخامات فيها.");
+  }
+  if (R.mg < R.minMg) wa("هامش الربح المعتمد " + R.mg + "% أقل من الحد الأدنى " + R.minMg + "%.");
+  const base = cost * (1 + R.oh / 100);
+  if (base > 0) {
+    const pm = (sub - base) / base * 100;
+    if (sub < base) er("سعر البيع بعد الخصم أقل من التكلفة شاملة المصاريف غير المباشرة.");
+    else if (dsc > 0 && pm < R.minMg) wa("بعد الخصم صار هامش الربح ≈ " + pm.toFixed(1) + "% وهو أقل من الحد الأدنى " + R.minMg + "%.");
+  }
+  if (dsc > 0 && dsc0 > 0) {
+    const pc = dsc / dsc0 * 100;
+    if (pc > R.maxDisc) wa("الخصم " + pc.toFixed(1) + "% يتجاوز الحد المقبول " + R.maxDisc + "%.");
+  }
+  const ps = P.pay.reduce((s, y) => s + (+y.p || 0), 0);
+  if (P.pay.length && Math.round(ps) !== 100) wa("مجموع نسب الدفعات " + ps + "% وليس 100%.");
+
+  const o = W.length ? W.map(x => `<div class="wi ${x.l}"><b>${x.l == "e" ? "خطأ" : "تنبيه"}</b>${esc(x.m)}</div>`).join("") : '<div class="wi">لا توجد تنبيهات.</div>';
+  const ne = W.filter(x => x.l == "e").length;
+  $("warn").innerHTML = o;
+  $("warn2").innerHTML = W.length ? o : "";
+  T.W = W;
+  $("bW").textContent = W.length ? W.length + " تنبيه" : "سليم ✓";
+  $("bW").className = "wb" + (ne ? " e" : W.length ? " w" : " ok");
+}
+
+/* ==========================================================================
+   7. الحساب الرئيسي وتحديث الشريط السفلي (Main Calc Loop)
+   ========================================================================== */
+function calc() {
+  const ic = G.map(x => x.k ? kc(x) : ci(x));
+  let cost = 0, sellK = 0, sellI = 0;
+
+  ic.forEach((c, i) => {
+    cost += c.cost;
+    if (c.kit) sellK += c.sell; else sellI += c.sell;
+    const e = $("r" + i);
+    if (e) {
+      e.innerHTML = c.kit
+        ? `<span>الوحدات: <b>${G[i].units.length}</b></span><span>ألواح الهيكل ≈ <b>${c.sb.toFixed(1)}</b> (${Math.ceil(c.sb - 1e-9)} كاملة)</span><span>للمتر الطولي: <b>${fm(G[i].low ? c.sell / (G[i].low / 100) : 0)}</b></span><span>الإجمالي: <b>${fm(c.sell)} ${CUR}</b></span>`
+        : `<span>المساحة: <b>${c.a.toFixed(2)} م²</b></span><span>الألواح للوحدة: <b>${c.est.toFixed(1)}</b> (≈${Math.ceil(c.est)})</span><span>سعر الوحدة: <b>${fm(c.sell / c.q)}</b></span><span>الإجمالي: <b>${fm(c.sell)} ${CUR}</b></span>`;
+    }
+  });
+
+  const dsc0 = sellK + sellI;
+  const dsc = P.dt == "fix" ? Math.min(+P.dv || 0, dsc0) : dsc0 * Math.min(+P.dv || 0, 100) / 100;
+  const sub = dsc0 - dsc, vat = sub * R.vat / 100;
+  const kits = ic.filter(c => c.kit), k0 = kits[0], i0 = ic.indexOf(k0);
+  T = { ic, kits, sub, vat, dsc, dsc0 };
+
+  $("sk").textContent = fm(sellK) + " " + CUR;
+  $("si").textContent = fm(sellI) + " " + CUR;
+  $("dscr").style.display = dsc > 0 ? "flex" : "none";
+  $("dsc").textContent = "-" + fm(dsc) + " " + CUR;
+  $("sub").textContent = fm(sub) + " " + CUR;
+  $("vatl").textContent = "ضريبة القيمة المضافة " + R.vat + "%";
+  $("vat").textContent = fm(vat) + " " + CUR;
+  $("grand").textContent = fm(sub + vat) + " " + CUR;
+  $("bTot").textContent = fm(sub + vat) + " " + CUR;
+  $("bSub").textContent = "قبل الضريبة " + fm(sub) + (k0 && G[i0].low ? " · للمتر الطولي " + fm(k0.sell / (G[i0].low / 100)) : "");
+
+  const sbT = kits.reduce((s, c) => s + c.sb, 0), skT = kits.reduce((s, c) => s + c.sk, 0);
+  $("info").innerHTML = "داخلي: التكلفة المباشرة " + fm(cost) + " · الربح قبل الضريبة " + fm(sub - cost) + (kits.length ? "<br>ألواح الهيكل ≈ " + sbT.toFixed(1) + " (" + Math.ceil(sbT - 1e-9) + " كاملة) · الظهر ≈ " + skT.toFixed(1) : "");
+
+  const m = {};
+  kits.forEach(c => { for (const n in c.c) m[n] = (m[n] || 0) + c.c[n]; });
+  $("brk").innerHTML = Object.keys(m).map(n => `<div class="ln"><span>${n}</span><span>${fm(m[n])}</span></div>`).join("");
+
+  T.L = lineList(false);
+
+  if (TAB === "Q") qr(T.L, sub, vat, dsc);
+  if (TAB === "P") br(ic);
+  if (TAB === "A" || TAB === "K") ar();
+  if (TAB === "K") {
+    const ke = KI != null && ic[KI] && ic[KI].kit ? G[KI] : null;
+    $("kdr").innerHTML = ke ? kdraw(false, ke) : "";
+    $("kname").textContent = ke ? ke.name : "";
+  }
+  wr(ic, sub, cost, dsc, dsc0);
+}
+
+/* ==========================================================================
+   8. الصفحة الرئيسية وإدارة الأحداث (Home Screen & Event Listeners)
+   ========================================================================== */
+function fixKI(i, add) {
+  if (KI == null) return;
+  if (add) { if (KI > i) KI++; }
+  else if (KI == i) KI = null;
+  else if (KI > i) KI--;
+}
+
+function ptot(p) {
+  const ic = p.G.map(x => x.k ? kc(x) : ci(x));
+  let s = 0; ic.forEach(c => { s += c.sell; });
+  const q = p.P, ds = q.dt == "fix" ? Math.min(+q.dv || 0, s) : s * Math.min(+q.dv || 0, 100) / 100;
+  return { tot: (s - ds) * (1 + R.vat / 100) };
+}
+
+function psum(p) {
+  const ks = p.G.filter(x => x.k).length, o = {}, a = [];
+  p.G.forEach(x => {
+    if (!x.k) {
+      const n = (D.ty[x.t] || D.ty[0]).n;
+      o[n] = (o[n] || 0) + (+x.q || 1);
+    }
+  });
+  if (ks) a.push(ks > 1 ? ks + " مطابخ" : "مطبخ");
+  Object.keys(o).forEach(n => a.push(n + (o[n] > 1 ? " ×" + o[n] : "")));
+  return a.join("، ") || "لا توجد منتجات";
+}
+
+function homeR() {
+  const q = HQ.trim().toLowerCase(), cnt = { all: S.pr.length };
+  let totalVal = 0, activeCnt = 0;
+  STS.forEach(s => { cnt[s[0]] = 0; });
+  S.pr.forEach(p => {
+    const k = p.P.stt || "draft";
+    cnt[k] = (cnt[k] || 0) + 1;
+    totalVal += ptot(p).tot;
+    if (k === "accepted" || k === "progress") activeCnt++;
+  });
+
+  // تحديث بطاقات الإحصائيات السريعة
+  $("hstats").innerHTML = `
+    <div class="stat-box"><span>إجمالي المشاريع</span><b>${S.pr.length}</b></div>
+    <div class="stat-box"><span>مقبولة وقيد التنفيذ</span><b style="color:var(--acc)">${activeCnt}</b></div>
+    <div class="stat-box"><span>إجمالي قيمة المشاريع</span><b>${fm(totalVal)} <small style="font-size:12px;font-weight:500">${CUR}</small></b></div>
+  `;
+
+  $("hc").innerHTML = [["all", "الكل"]].concat(STS).map(s => `<button class="${HF == s[0] ? "p" : ""}" data-hf="${s[0]}">${s[1]} (${cnt[s[0]] || 0})</button>`).join("");
+  const L = S.pr.map((p, i) => ({ p, i })).filter(o => (HF == "all" || (o.p.P.stt || "draft") == HF) && (!q || (o.p.n + " " + psum(o.p) + (o.p.G.some(x => x.k) ? " مطبخ" : "")).toLowerCase().indexOf(q) > -1));
+
+  $("hl").innerHTML = L.length ? L.map(o => {
+    const p = o.p, st = p.P.stt || "draft", nm = (STS.find(s => s[0] == st) || STS[0])[1];
+    return `<button class="pc st-${st}" data-op="${o.i}"><span class="r"><b style="font-size:16px">${esc(p.n)}</b><span class="bd s-${st}">${nm}</span></span><span class="note" style="margin:0;font-size:13px">${esc(psum(p))}</span><span class="r" style="padding-top:8px;border-top:1px dashed var(--line)"><span class="note" style="margin:0">${p.P.cd ? new Date(p.P.cd).toLocaleDateString("en-GB") : ""}</span><b style="font-size:18px;color:var(--acc)">${fm(ptot(p).tot)} <span style="font-size:12px;font-weight:500">${CUR}</span></b></span></button>`;
+  }).join("") : '<div class="card" style="grid-column:1/-1;text-align:center"><p class="note" style="margin:0">لا توجد مشاريع مطابقة لبحثك.</p></div>';
+}
+
+function view(v) {
+  VW = v;
+  $("home").style.display = v == "home" ? "block" : "none";
+  $("proj").style.display = v == "proj" ? "block" : "none";
+  $("pbr").style.display = v == "proj" ? "block" : "none";
+  if (v == "home") homeR();
+}
+
+const setp = (path, v) => {
+  const p = path.split("."), root = { D, R, P, G, K, C, PR: S.pr[S.cur] };
+  let o = root[p[0]];
+  for (let i = 1; i < p.length - 1; i++) o = o[p[i]];
+  o[p[p.length - 1]] = v;
+};
+
+let IMP = null;
+const DO = {};
+document.addEventListener("toggle", e => {
+  const k = e.target.dataset && e.target.dataset.dk;
+  if (k) DO[k] = e.target.open;
+}, true);
+
+function impT(t) {
+  let o;
+  try { o = JSON.parse(t); } catch (e) { $("bm").textContent = "النص أو الملف غير صالح."; return; }
+  const s = o && (o.S || o);
+  if (!s || !s.D || !s.R || !Array.isArray(s.pr) || !s.pr.length) {
+    $("bm").textContent = "لا يبدو أن هذا نسخة احتياطية لهذا النظام.";
+    return;
+  }
+  IMP = s;
+  $("bm").textContent = "النسخة تحتوي " + s.pr.length + " مشروع. الاستيراد يستبدل كل بياناتك الحالية، فصدّر نسخة منها أولًا إن لزم.";
+  $("bc").innerHTML = '<button class="p" data-imp="1">استبدال بياناتي بهذه النسخة</button>';
+}
+
+function fillC() {
+  document.querySelectorAll('[data-b^="C."]').forEach(el => { el.value = C[el.dataset.b.slice(2)] || ""; });
+}
+
+function curUI() {
+  const i = C.cm ? -1 : CURS.findIndex(c => c[0] == C.cur);
+  $("cs").innerHTML = CURS.map((c, j) => `<option value="${j}"${j == i ? " selected" : ""}>${c[1]} (${c[0]})</option>`).join("") + `<option value="x"${i < 0 ? " selected" : ""}>عملة أخرى...</option>`;
+  $("ccw").style.display = i < 0 ? "block" : "none";
+  $("cc").value = i < 0 ? (C.cur || "") : "";
+  const v = i >= 0 ? CURS[i][2] : null;
+  $("cn").innerHTML = v == null ? "" : `ضريبة القيمة المضافة المعتادة في هذه العملة: ${v}% (تحقق منها قبل الاعتماد). ` + (R.vat == v ? "" : `<button data-vat="${v}">تطبيق ${v}%</button>`);
+}
+
+$("cs").onchange = e => {
+  const v = e.target.value;
+  if (v == "x") { C.cm = true; C.cur = $("cc").value.trim() || C.cur || "ر.س"; }
+  else { C.cm = false; C.cur = CURS[+v][0]; }
+  CUR = C.cur || "ر.س";
+  markDirty("G", "K", "P", "Q", "A");
+  save(); curUI(); calc();
+};
+$("cc").oninput = () => {
+  C.cur = $("cc").value.trim() || "ر.س";
+  CUR = C.cur;
+  markDirty("G", "K", "P", "Q", "A");
+  save(); calc();
+};
+
+function conv(f) {
+  const q = v => Math.round(v * f * 1000) / 1000;
+  const m = o => { if (o && typeof o.p == "number") o.p = q(o.p); };
+  ["body", "back", "front", "fin", "hw", "stone", "light", "xc"].forEach(k => S.D[k].forEach(m));
+  ["edgeP", "labR", "macR", "tariff", "cutP", "trans", "instM", "lmMin", "lmMax"].forEach(k => S.R[k] = q(S.R[k]));
+  S.R.cx.forEach(c => { if (c.t != "pct") c.v = q(c.v); });
+  S.D.ty.forEach(y => { y.hw = q(y.hw); (y.cp || []).forEach(c => { if (c.t != "pct") c.v = q(c.v); }); });
+  Object.keys(S.D.uc).forEach(k => S.D.uc[k].forEach(c => { c.v = q(c.v); }));
+  S.pr.forEach(p => {
+    if (p.P.dt == "fix") p.P.dv = q(p.P.dv);
+    p.G.forEach(x => { if (x.hw !== undefined) x.hw = q(x.hw); });
+  });
+}
+
+function fx(k, j) {
+  const f = v => v == j ? 0 : v > j ? v - 1 : v;
+  const g = (o, L) => o[L] = (o[L] || []).filter(l => l.i != j).map(l => ({ ...l, i: l.i > j ? l.i - 1 : l.i }));
+  S.pr.forEach(pr => {
+    ((pr.P.pk || {}).l || []).forEach(q => {
+      const m = { body: "body", front: "front", fin: "fin", stone: "stone", hw: "slide" }[k];
+      if (m) q[m] = f(q[m]);
+    });
+    pr.G.forEach(x => {
+      if (x.k) {
+        if (k == "hw") { for (const r in x.o) x.o[r] = f(x.o[r]); g(x, "ex"); }
+        else if (k == "light") g(x, "li");
+        else if (k == "xc") g(x, "xc");
+        else if (k == "stone") x.st.m = f(x.st.m);
+        else if (k in x && typeof x[k] == "number") x[k] = f(x[k]);
+      } else if (k == "hw") g(x, "ac");
+      else if (k == "xc") g(x, "xc");
+      else if (k == "ty") x.t = f(x.t);
+      else if (k == "body") x.b = f(x.b);
+      else if (k == "fin") x.f = f(x.f);
+    });
+  });
+}
+
+let AR = null;
+function arm(k, el, fn) {
+  if (AR == k) { AR = null; fn(); }
+  else {
+    AR = k; el.textContent = "اضغط للتأكيد";
+    setTimeout(() => { if (AR == k) { AR = null; bar(); $("reset").textContent = "إعادة كل القيم الافتراضية"; } }, 3000);
+  }
+}
+
+document.addEventListener("input", e => {
+  const t = e.target, d = t.dataset;
+  if (!d) return;
+  if (d.ty !== undefined) {
+    const x = G[+d.ty];
+    G[+d.ty] = Object.assign(mkI(+t.value), { name: x.name, b: x.b, f: x.f, q: x.q });
+    markDirty("G", "P", "Q", "A");
+    save(); render(); return;
+  }
+  if (!d.b) return;
+  setp(d.b, t.type == "checkbox" ? t.checked : (t.type == "number" || d.n) ? +t.value : t.value);
+  if (d.b.startsWith("D.") || d.b.startsWith("R.")) markDirty("K", "G", "P", "Q", "A");
+  else if (d.b.startsWith("K.")) markDirty("G", "P", "Q", "A");
+  else if (d.b.startsWith("G.")) markDirty("P", "Q", "A");
+  save();
+  calc();
+});
+
+document.addEventListener("change", e => {
+  const t = e.target, d = t.dataset, b = d && d.b;
+  if (d && d.ps) { S.cur = +t.value; use(); markDirty(); save(); render(); }
+  else if (b && /^D\.\w+\.\d+\.(n|r|f)$/.test(b)) { markDirty("D", "K", "G"); render(); }
+  else if (b == "PR.n") bar();
+});
+
+document.addEventListener("click", e => {
+  const el = e.target.closest("[data-tab], [data-du], [data-au], [data-la], [data-dx], [data-dli], [data-dxc], [data-imu], [data-imx], [data-adj], [data-vat], [data-pya], [data-pyd], [data-imp], [data-cpa], [data-cpd], [data-cxa], [data-cxd], [data-gd], [data-gc], [data-aa], [data-xa], [data-dbadd], [data-dbrm], [data-home], [data-op], [data-set], [data-ke], [data-hf], [data-bh], [data-bw], [data-pn], [data-pc], [data-pd], [data-da0], [data-dc0]") || e.target;
+  const d = el.dataset;
+  if (!d) return;
+  let r = 0;
+
+  if (d.tab) { show(d.tab); return; }
+  if (d.du !== undefined) { K.units.splice(+d.du, 1); markDirty("K", "G"); r = 1; }
+  if (d.au) { K.units.push(mu(d.au, 60)); markDirty("K", "G"); r = 1; }
+  if (d.la) { K[d.la].push({ i: 0, q: 1 }); markDirty("K", "G"); r = 1; }
+  if (d.dx !== undefined) { K.ex.splice(+d.dx, 1); markDirty("K", "G"); r = 1; }
+  if (d.dli !== undefined) { K.li.splice(+d.dli, 1); markDirty("K", "G"); r = 1; }
+  if (d.dxc !== undefined) { K.xc.splice(+d.dxc, 1); markDirty("K", "G"); r = 1; }
+  if (d.imu) { IMT = d.imu.split(":"); IMT[1] = +IMT[1]; $("imf").click(); }
+  if (d.imx) { const [k, i] = d.imx.split(":"); delete D[k][+i].im; markDirty("D"); r = 1; }
+
+  if (d.adj) {
+    const [t, v] = d.adj.split(":"), f = +v;
+    arm("adj" + d.adj, el, () => {
+      if (t == "waste") R.wB = f;
+      else if (t == "labor") { ["labB", "labF", "labD"].forEach(x => R[x] = Math.round(R[x] * f * 1000) / 1000); D.ty.forEach(y => y.lab = Math.round(y.lab * f * 1000) / 1000); }
+      else if (t == "mach") { R.cncH = Math.round(R.cncH * f * 1000) / 1000; D.ty.forEach(y => y.cnc = Math.round(y.cnc * f * 1000) / 1000); }
+      markDirty(); save(); render();
+    });
+    setTimeout(() => { if (AR !== "adj" + d.adj) calc(); }, 3300);
+  }
+
+  if (d.vat) { R.vat = +d.vat; markDirty("D"); save(); render(); }
+  if (d.pya) { P.pay.push({ n: "دفعة", p: 0 }); markDirty("Q"); r = 1; }
+  if (d.pyd !== undefined) { P.pay.splice(+d.pyd, 1); markDirty("Q"); r = 1; }
+  if (d.imp && IMP) { S = norm(IMP); IMP = null; use(); markDirty(); saveNow(); render(); $("bm").textContent = "تم الاستيراد بنجاح."; $("bc").innerHTML = ""; }
+  if (d.cpa) { const [k, i] = d.cpa.split(":"); (k == "ty" ? D.ty[+i].cp : D.uc[i]).push({ n: "بند جديد", v: 0, t: "fix" }); markDirty("D"); r = 1; }
+  if (d.cpd) { const [k, i, j] = d.cpd.split(":"); (k == "ty" ? D.ty[+i].cp : D.uc[i]).splice(+j, 1); markDirty("D"); r = 1; }
+  if (d.cxa) { R.cx.push({ n: "متغير جديد", v: 0, t: "fix", s: "b" }); markDirty("D"); r = 1; }
+  if (d.cxd !== undefined) { R.cx.splice(+d.cxd, 1); markDirty("D"); r = 1; }
+  if (d.gd !== undefined) { G.splice(+d.gd, 1); fixKI(+d.gd); markDirty("G", "P", "Q"); r = 1; }
+  if (d.gc !== undefined) { G.splice(+d.gc + 1, 0, JSON.parse(JSON.stringify(G[+d.gc]))); fixKI(+d.gc, 1); markDirty("G", "P", "Q"); r = 1; }
+  if (d.aa !== undefined) { G[+d.aa].ac.push({ i: 0, q: 1 }); markDirty("G"); r = 1; }
+  if (d.xa !== undefined) { (G[+d.xa].xc = G[+d.xa].xc || []).push({ i: 0, q: 1 }); markDirty("G"); r = 1; }
+
+  for (const k in d) {
+    if (k.slice(0, 2) == "da" && k.length > 2 && /^\d+$/.test(k.slice(2))) { G[+k.slice(2)].ac.splice(+d[k], 1); markDirty("G"); r = 1; }
+    if (k.slice(0, 2) == "dc" && /^\d+$/.test(k.slice(2))) { G[+k.slice(2)].xc.splice(+d[k], 1); markDirty("G"); r = 1; }
+  }
+
+  if (d.dbadd) {
+    D[d.dbadd].push(d.dbadd == "hw" ? { n: "جديد", p: 0, r: "" } : d.dbadd == "ty" ? { n: "منتج جديد", f: "panel", w: 100, h: 100, d: 20, s: 0, hw: 0, lab: 1.8, edge: 3, cnc: .2, cp: [] } : d.dbadd == "body" || d.dbadd == "back" ? { n: "جديد", p: 0, l: 244, w: 122 } : { n: "جديد", p: 0 });
+    markDirty("D", "K", "G"); r = 1;
+  }
+  if (d.dbrm) {
+    const [k, j] = d.dbrm.split(":");
+    if (D[k].length > 1) { D[k].splice(+j, 1); fx(k, +j); markDirty("D", "K", "G"); r = 1; }
+  }
+
+  if (d.home) { VW = "home"; KI = null; saveNow(); r = 1; }
+  if (d.op !== undefined) { S.cur = +d.op; use(); markDirty(); VW = "proj"; show("G"); r = 1; }
+  if (d.set) { VW = "proj"; markDirty("D"); show("D"); r = 1; }
+  if (d.ke !== undefined) { KI = +d.ke; K = G[KI]; markDirty("K"); show("K"); r = 1; }
+  if (d.hf) { HF = d.hf; homeR(); }
+  if (d.bh) { const o = $("bsh").style.display == "none"; $("bsh").style.display = o ? "block" : "none"; $("bh").setAttribute("aria-expanded", String(o)); }
+  if (d.bw) { $("bsh").style.display = "block"; $("bh").setAttribute("aria-expanded", "true"); }
+  if (d.pn) { S.pr.push(newP("مشروع " + (S.pr.length + 1))); S.cur = S.pr.length - 1; use(); markDirty(); VW = "proj"; show("G"); r = 1; }
+  if (d.pc) { const c = JSON.parse(JSON.stringify(S.pr[S.cur])); c.n += " (نسخة)"; c.P.stt = "draft"; c.P.cd = Date.now(); S.pr.splice(S.cur + 1, 0, c); S.cur++; use(); markDirty(); r = 1; }
+  if (d.pd && S.pr.length > 1) arm("pd", el, () => { S.pr.splice(S.cur, 1); S.cur = Math.max(0, S.cur - 1); use(); VW = "home"; saveNow(); render(); });
+
+  if (r) { save(); render(); }
+});
+
+$("cvb").onclick = e => {
+  const f = +$("fxr").value;
+  if (!(f > 0)) { $("cvm").textContent = "اكتب سعر صرف أكبر من صفر."; return; }
+  if (f == 1) { $("cvm").textContent = "سعر الصرف 1 لا يغيّر شيئًا."; return; }
+  arm("cv", e.target, () => {
+    conv(f); $("fxr").value = 1; markDirty(); saveNow(); render();
+    $("cvm").textContent = "تم تحويل الأسعار بسعر الصرف " + f + ".";
+    $("cvb").textContent = "تحويل الأسعار";
+  });
+  setTimeout(() => { if (AR != "cv") $("cvb").textContent = "تحويل الأسعار"; }, 3300);
+};
+
+let IMT = null;
+$("imf").onchange = e => {
+  const f = e.target.files[0]; e.target.value = "";
+  if (!f || !IMT) return;
+  const k = IMT[0], i = IMT[1], rd = new FileReader();
+  rd.onload = () => {
+    const im = new Image();
+    im.onload = () => {
+      const s = Math.min(1, 180 / Math.max(im.width, im.height));
+      const cv = document.createElement("canvas");
+      cv.width = Math.max(1, Math.round(im.width * s));
+      cv.height = Math.max(1, Math.round(im.height * s));
+      const cx = cv.getContext("2d");
+      cx.fillStyle = "#fff"; cx.fillRect(0, 0, cv.width, cv.height);
+      cx.drawImage(im, 0, 0, cv.width, cv.height);
+      if (D[k] && D[k][i]) { D[k][i].im = cv.toDataURL("image/jpeg", .72); markDirty("D", "Q"); saveNow(); render(); }
+    };
+    im.src = rd.result;
+  };
+  rd.readAsDataURL(f);
+};
+
+$("bx").onclick = () => {
+  const t = JSON.stringify({ v: 1, t: new Date().toISOString(), S });
+  $("bt").value = t;
+  try {
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([t], { type: "application/json" }));
+    a.download = "pricing-backup-" + new Date().toISOString().slice(0, 10) + ".json";
+    document.body.appendChild(a); a.click(); a.remove();
+  } catch (e) {}
+  try { navigator.clipboard.writeText(t); } catch (e) {}
+  $("bm").textContent = "تم تجهيز النسخة: ملف للتنزيل ونص منسوخ. إن لم ينزل الملف فاحفظ النص الظاهر في الصندوق أدناه داخل ملف نصي.";
+};
+$("bimp").onclick = () => $("bi").click();
+$("bi").onchange = e => { const f = e.target.files[0]; if (!f) return; const r = new FileReader(); r.onload = () => impT(String(r.result)); r.readAsText(f); e.target.value = ""; };
+$("btp").onclick = () => impT($("bt").value.trim());
+$("bprint").onclick = () => { show("P"); setTimeout(() => window.print(), 80); };
+$("bcopy").onclick = () => buyCopy(0);
+$("bcsv").onclick = () => buyCopy(1);
+
+$("addI").onclick = () => {
+  const v = $("addT").value;
+  if (v == "k") {
+    G.push(mkK(G.some(x => x.k) ? "مطبخ " + (G.filter(x => x.k).length + 1) : "المطبخ"));
+    KI = G.length - 1; K = G[KI]; markDirty("K", "G"); save(); show("K"); render();
+  } else {
+    G.push(mkI(+v)); markDirty("G"); save(); render();
+  }
+};
+
+$("hq").oninput = () => { HQ = $("hq").value; homeR(); };
+$("gen").onclick = () => { if (K) { gen(K); markDirty("K", "G"); save(); render(); } };
+$("reset").onclick = e => arm("rs", e.target, () => { S = S0(); use(); markDirty(); saveNow(); render(); });
+$("lgx").onclick = () => { C.lg = ""; markDirty("Q"); saveNow(); calc(); };
+$("lg").onchange = e => {
+  const f = e.target.files[0]; if (!f) return;
+  const rd = new FileReader();
+  rd.onload = () => {
+    const im = new Image();
+    im.onload = () => {
+      const s = Math.min(1, 160 / im.height), cv = document.createElement("canvas");
+      cv.width = im.width * s; cv.height = im.height * s;
+      cv.getContext("2d").drawImage(im, 0, 0, cv.width, cv.height);
+      C.lg = cv.toDataURL("image/png"); markDirty("Q"); saveNow(); calc();
+    };
+    im.src = rd.result;
+  };
+  rd.readAsDataURL(f);
+};
+$("print").onclick = () => { show("Q"); setTimeout(() => window.print(), 80); };
+$("copy").onclick = () => {
+  const t = "عرض سعر" + (S.pr[S.cur].n ? " - " + S.pr[S.cur].n : "") + "\n\n" +
+    T.L.map(l => "- " + l[0] + (l[1] > 1 ? " ×" + l[1] : "") + ": " + fm(l[2]) + " " + CUR).join("\n") +
+    (T.dsc > 0 ? "\n\nالخصم: -" + fm(T.dsc) : "") +
+    "\n\nالمجموع: " + fm(T.sub) + "\nالضريبة " + R.vat + "%: " + fm(T.vat) + "\nالإجمالي: " + fm(T.sub + T.vat) + " " + CUR;
+  try { navigator.clipboard.writeText(t).then(() => $("msg").textContent = "تم نسخ العرض.", () => $("msg").textContent = "تعذّر النسخ."); }
+  catch (e) { $("msg").textContent = "تعذّر النسخ."; }
+};
+
+show("K");
+render();
+
+/* ==========================================================================
+   9. نظام الترخيص والتحقق (License System - Unmodified)
+   ========================================================================== */
+//--lic-core
+const LS = "06586df5c7ca1edb5317";
+function hk(s) {
+  let a = 0xdeadbeef, b = 0x41c6ce57;
+  for (let i = 0; i < s.length; i++) {
+    const c = s.charCodeAt(i);
+    a = Math.imul(a ^ c, 2654435761);
+    b = Math.imul(b ^ c, 1597334677);
+  }
+  a = Math.imul(a ^ (a >>> 16), 2246822507) ^ Math.imul(b ^ (b >>> 13), 3266489909);
+  b = Math.imul(b ^ (b >>> 16), 2246822507) ^ Math.imul(a ^ (a >>> 13), 3266489909);
+  return [a >>> 0, b >>> 0];
+}
+const LKY = (n, e) => {
+  const [a, b] = hk(n.trim().replace(/\s+/g, " ") + "|" + e + "|" + LS);
+  const f = x => x.toString(36).toUpperCase().padStart(7, "0");
+  return f(a) + "-" + f(b) + "-" + e;
+};
+function chk(n, k, t0) {
+  k = k.trim().toUpperCase();
+  const m = k.match(/^[0-9A-Z]{7}-[0-9A-Z]{7}-([0-9A-Z]{4,7})$/);
+  if (!m || LKY(n, m[1]) !== k) return { r: "bad" };
+  const e = m[1], now = Date.now();
+  if (/^\d{4}$/.test(e)) {
+    if (e === "0000") return { r: "ok", left: null };
+    const end = new Date(2000 + +e.slice(0, 2), +e.slice(2), 1).getTime();
+    return now >= end ? { r: "exp" } : { r: "ok", left: end - now };
+  }
+  if (e[0] === "T" && e.length === 6) {
+    const end = parseInt(e.slice(1), 36) * 6e4;
+    return now >= end ? { r: "exp" } : { r: "ok", left: end - now };
+  }
+  if (e[0] === "A" && e.length === 7) {
+    const hrs = parseInt(e.slice(1, 4), 36), by = parseInt(e.slice(4), 36) * 864e5 + 864e5;
+    if (!t0) return now >= by ? { r: "late" } : { r: "ok", left: hrs * 36e5, fresh: true };
+    const end = t0 + hrs * 36e5;
+    return now >= end ? { r: "exp" } : { r: "ok", left: end - now };
+  }
+  return { r: "bad" };
+}
+function verify(n, k, t0) {
+  const r = chk(n, k, t0);
+  if (r.r === "ok" && r.left !== null) {
+    let ts = 0;
+    try { ts = +localStorage.getItem("ws_ts") || 0; } catch (e) {}
+    if (Date.now() < ts - 6e5) return { r: "clock" };
+  }
+  return r;
+}
+//--lic-end
+
+const LMSG = {
+  bad: "الاسم أو المفتاح غير صحيح.",
+  exp: "انتهى الترخيص. تواصل مع البائع للتجديد.",
+  late: "انتهت مهلة تفعيل هذا المفتاح. اطلب مفتاحًا جديدًا.",
+  clock: "ساعة الجهاز غير صحيحة. صحّحها ثم أعد المحاولة."
+};
+const lf = ms => {
+  const h = ms / 36e5;
+  return h < 1 ? "أقل من ساعة" : h < 48 ? Math.ceil(h) + " ساعة" : Math.ceil(h / 24) + " يومًا";
+};
+let LST = null;
+const lget = () => { try { return JSON.parse(localStorage.getItem("ws_lic") || "null"); } catch (e) { return null; } };
+const lput = o => { try { localStorage.setItem("ws_lic", JSON.stringify(o)); } catch (e) {} };
+function lstamp() { try { localStorage.setItem("ws_ts", String(Math.max(+localStorage.getItem("ws_ts") || 0, Date.now()))); } catch (e) {} }
+function lock(m) { $("app").classList.add("lock"); $("lic").style.display = "flex"; $("lm").textContent = m || ""; }
+function unlock(s, r) {
+  $("app").classList.remove("lock");
+  $("lic").style.display = "none";
+  lstamp(); LST = s;
+  let el = $("lst");
+  if (!el) {
+    document.querySelector(".topbar h1").insertAdjacentHTML("afterend", '<span id="lst"></span>');
+    el = $("lst");
+  }
+  el.textContent = "مرخّص لـ " + s.n + (r.left !== null ? " · متبقي " + lf(r.left) : "");
+}
+function tick() {
+  if (!LST) return;
+  const r = verify(LST.n, LST.k, LST.t0);
+  if (r.r === "ok") unlock(LST, r);
+  else { LST = null; lock(LMSG[r.r]); }
+}
+const s0 = lget();
+if (s0) {
+  const r = verify(s0.n, s0.k, s0.t0);
+  if (r.r === "ok") unlock(s0, r);
+  else { $("ln").value = s0.n; $("lk").value = s0.k; lock(LMSG[r.r]); }
+}
+$("lb").onclick = () => {
+  const n = $("ln").value.trim(), k = $("lk").value.trim().toUpperCase();
+  const o = lget(), t0 = o && o.k === k && o.n === n ? o.t0 : undefined;
+  const r = verify(n, k, t0);
+  if (r.r !== "ok") { $("lm").textContent = LMSG[r.r]; return; }
+  const s = { n, k, t0: r.fresh ? Date.now() : t0 };
+  lput(s); unlock(s, r);
+};
+setInterval(tick, 30000);
+</script>
+</body>
+</html>
